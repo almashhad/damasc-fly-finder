@@ -1,32 +1,37 @@
 import { useState, useEffect, useMemo } from "react";
-import { Plane, Loader2, ArrowLeftRight, ExternalLink, Clock, MapPin } from "lucide-react";
+import { Plane, Loader2, ArrowLeftRight, ExternalLink, Clock, ChevronDown, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { useDestinations, useDamascusFlights } from "@/hooks/useFlights";
 import type { Flight, Destination } from "@/types/flight";
+import { cn } from "@/lib/utils";
 
 // Map countries to their likely airport codes
 const countryToAirport: Record<string, string> = {
-  'AE': 'DXB', // UAE -> Dubai
-  'QA': 'DOH', // Qatar -> Doha
-  'SA': 'JED', // Saudi -> Jeddah
-  'KW': 'KWI', // Kuwait
-  'BH': 'BAH', // Bahrain
-  'OM': 'MCT', // Oman
-  'JO': 'AMM', // Jordan
-  'LB': 'BEY', // Lebanon
-  'EG': 'CAI', // Egypt
-  'TR': 'IST', // Turkey
-  'IQ': 'BGW', // Iraq
-  'RU': 'SVO', // Russia
+  'AE': 'DXB', 'QA': 'DOH', 'SA': 'JED', 'KW': 'KWI', 'BH': 'BAH',
+  'OM': 'MCT', 'JO': 'AMM', 'LB': 'BEY', 'EG': 'CAI', 'TR': 'IST',
+  'IQ': 'BGW', 'RU': 'SVO',
 };
 
 const Index = () => {
   const [userLocation, setUserLocation] = useState<string | null>(null);
-  const [detectedCity, setDetectedCity] = useState<string>("");
   const [isDetecting, setIsDetecting] = useState(true);
-  const [tripDirection, setTripDirection] = useState<'to' | 'from'>('to'); // 'to' = to Damascus
+  const [tripDirection, setTripDirection] = useState<'to' | 'from'>('to');
+  const [cityPickerOpen, setCityPickerOpen] = useState(false);
   
   const { data: destinations } = useDestinations();
   const { data: flights, isLoading: flightsLoading } = useDamascusFlights(
@@ -34,59 +39,46 @@ const Index = () => {
     userLocation || undefined
   );
 
+  // Non-Damascus destinations
+  const otherDestinations = useMemo(() => {
+    return destinations?.filter(d => d.airport_code !== 'DAM') || [];
+  }, [destinations]);
+
   // Detect user location
   useEffect(() => {
     const detectLocation = async () => {
       try {
-        // Try to get location from IP
         const response = await fetch('https://ipapi.co/json/');
         const data = await response.json();
         
-        if (data.country_code && countryToAirport[data.country_code]) {
-          setUserLocation(countryToAirport[data.country_code]);
-          setDetectedCity(data.city || data.country_name);
-        } else if (data.country_code === 'SY') {
-          // User is in Syria, default to Dubai as destination
+        if (data.country_code === 'SY') {
           setUserLocation('DXB');
-          setDetectedCity('دمشق');
           setTripDirection('from');
+        } else if (data.country_code && countryToAirport[data.country_code]) {
+          setUserLocation(countryToAirport[data.country_code]);
         } else {
-          // Default to Dubai if location not detected
           setUserLocation('DXB');
-          setDetectedCity('دبي');
         }
       } catch (error) {
-        // Default to Dubai on error
         setUserLocation('DXB');
-        setDetectedCity('دبي');
       } finally {
         setIsDetecting(false);
       }
     };
-
     detectLocation();
   }, []);
 
-  // Get destination info
   const userDestination = useMemo(() => {
     return destinations?.find(d => d.airport_code === userLocation);
   }, [destinations, userLocation]);
 
-  const formatTime = (time: string) => time.slice(0, 5);
-  
-  const formatDuration = (minutes: number) => {
-    const hours = Math.floor(minutes / 60);
-    const mins = minutes % 60;
-    return `${hours}س ${mins > 0 ? `${mins}د` : ''}`;
-  };
-
-  const formatPrice = (price: number | null) => {
-    if (!price) return "اتصل للسعر";
-    return `$${price}`;
-  };
-
   const toggleDirection = () => {
     setTripDirection(prev => prev === 'to' ? 'from' : 'to');
+  };
+
+  const handleSelectCity = (code: string) => {
+    setUserLocation(code);
+    setCityPickerOpen(false);
   };
 
   return (
@@ -111,12 +103,22 @@ const Index = () => {
               {/* From */}
               <div className="flex-1 p-5 text-center">
                 <p className="text-xs text-muted-foreground mb-1">من</p>
-                <p className="text-xl font-bold">
-                  {tripDirection === 'to' ? (userDestination?.city_ar || detectedCity || 'جاري التحديد...') : 'دمشق'}
-                </p>
-                <p className="text-sm text-muted-foreground">
-                  {tripDirection === 'to' ? (userLocation || '...') : 'DAM'}
-                </p>
+                {tripDirection === 'to' ? (
+                  <CitySelector
+                    destinations={otherDestinations}
+                    selectedCode={userLocation}
+                    onSelect={handleSelectCity}
+                    isOpen={cityPickerOpen}
+                    setIsOpen={setCityPickerOpen}
+                    isDetecting={isDetecting}
+                    selectedCity={userDestination}
+                  />
+                ) : (
+                  <div>
+                    <p className="text-xl font-bold">دمشق</p>
+                    <p className="text-sm text-muted-foreground">DAM</p>
+                  </div>
+                )}
               </div>
 
               {/* Swap Button */}
@@ -132,12 +134,22 @@ const Index = () => {
               {/* To */}
               <div className="flex-1 p-5 text-center">
                 <p className="text-xs text-muted-foreground mb-1">إلى</p>
-                <p className="text-xl font-bold">
-                  {tripDirection === 'to' ? 'دمشق' : (userDestination?.city_ar || detectedCity || 'جاري التحديد...')}
-                </p>
-                <p className="text-sm text-muted-foreground">
-                  {tripDirection === 'to' ? 'DAM' : (userLocation || '...')}
-                </p>
+                {tripDirection === 'from' ? (
+                  <CitySelector
+                    destinations={otherDestinations}
+                    selectedCode={userLocation}
+                    onSelect={handleSelectCity}
+                    isOpen={cityPickerOpen}
+                    setIsOpen={setCityPickerOpen}
+                    isDetecting={isDetecting}
+                    selectedCity={userDestination}
+                  />
+                ) : (
+                  <div>
+                    <p className="text-xl font-bold">دمشق</p>
+                    <p className="text-sm text-muted-foreground">DAM</p>
+                  </div>
+                )}
               </div>
             </div>
           </CardContent>
@@ -170,7 +182,7 @@ const Index = () => {
             <Card className="py-16 text-center">
               <Plane className="h-12 w-12 text-muted-foreground/30 mx-auto mb-4" />
               <p className="text-muted-foreground">لا توجد رحلات متاحة حالياً</p>
-              <p className="text-sm text-muted-foreground mt-1">سيتم إضافة الرحلات قريباً</p>
+              <p className="text-sm text-muted-foreground mt-1">جرب اختيار مدينة أخرى</p>
             </Card>
           )}
         </div>
@@ -185,6 +197,75 @@ const Index = () => {
     </div>
   );
 };
+
+// City Selector Component
+function CitySelector({
+  destinations,
+  selectedCode,
+  onSelect,
+  isOpen,
+  setIsOpen,
+  isDetecting,
+  selectedCity,
+}: {
+  destinations: Destination[];
+  selectedCode: string | null;
+  onSelect: (code: string) => void;
+  isOpen: boolean;
+  setIsOpen: (open: boolean) => void;
+  isDetecting: boolean;
+  selectedCity?: Destination;
+}) {
+  return (
+    <Popover open={isOpen} onOpenChange={setIsOpen}>
+      <PopoverTrigger asChild>
+        <button className="group cursor-pointer hover:opacity-80 transition-opacity">
+          <div className="flex items-center justify-center gap-1">
+            <p className="text-xl font-bold">
+              {isDetecting ? 'جاري التحديد...' : (selectedCity?.city_ar || 'اختر مدينة')}
+            </p>
+            <ChevronDown className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
+          </div>
+          <p className="text-sm text-muted-foreground">
+            {selectedCode || '...'}
+          </p>
+        </button>
+      </PopoverTrigger>
+      <PopoverContent className="w-64 p-0" align="center">
+        <Command>
+          <CommandInput placeholder="ابحث عن مدينة..." className="text-right" />
+          <CommandList>
+            <CommandEmpty>لا توجد نتائج</CommandEmpty>
+            <CommandGroup>
+              {destinations.map((dest) => (
+                <CommandItem
+                  key={dest.id}
+                  value={`${dest.city_ar} ${dest.city} ${dest.airport_code}`}
+                  onSelect={() => onSelect(dest.airport_code)}
+                  className="flex items-center justify-between cursor-pointer"
+                >
+                  <div className="flex items-center gap-2">
+                    <Check
+                      className={cn(
+                        "h-4 w-4",
+                        selectedCode === dest.airport_code ? "opacity-100" : "opacity-0"
+                      )}
+                    />
+                    <div className="text-right">
+                      <p className="font-medium">{dest.city_ar}</p>
+                      <p className="text-xs text-muted-foreground">{dest.country_ar}</p>
+                    </div>
+                  </div>
+                  <span className="font-mono text-sm text-primary">{dest.airport_code}</span>
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </CommandList>
+        </Command>
+      </PopoverContent>
+    </Popover>
+  );
+}
 
 // Simplified Flight Card
 function FlightCard({ flight }: { flight: Flight }) {
