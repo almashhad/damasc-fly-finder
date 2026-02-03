@@ -536,8 +536,7 @@ const Index = () => {
       <main className="max-w-5xl mx-auto px-4 mt-12 pb-16 space-y-8" ref={dealsSectionRef}>
         {/* Damascus Deals */}
         <DealsSection
-          title="صفقات رحلات دمشق"
-          subtitle="أرخص الرحلات من وإلى مطار دمشق الدولي هذا الشهر"
+          title="أرخص الرحلات من وإلى دمشق هذا الشهر"
           airportCode="DAM"
           airportName="دمشق"
           flights={damascusFlights || []}
@@ -547,8 +546,7 @@ const Index = () => {
         
         {/* Aleppo Deals */}
         <DealsSection
-          title="صفقات رحلات حلب"
-          subtitle="أرخص الرحلات من وإلى مطار حلب الدولي هذا الشهر"
+          title="أرخص الرحلات من وإلى حلب هذا الشهر"
           airportCode="ALP"
           airportName="حلب"
           flights={aleppoFlights || []}

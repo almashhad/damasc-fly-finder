@@ -1,5 +1,5 @@
-import { Plane, ArrowLeft, Loader2, Sparkles } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Plane, ArrowLeft, Loader2 } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import type { Flight } from "@/types/flight";
@@ -7,7 +7,6 @@ import { useNavigate } from "react-router-dom";
 
 interface DealsSectionProps {
   title: string;
-  subtitle: string;
   airportCode: string;
   airportName: string;
   flights: Flight[];
@@ -17,7 +16,6 @@ interface DealsSectionProps {
 
 export function DealsSection({
   title,
-  subtitle,
   airportCode,
   airportName,
   flights,
@@ -67,56 +65,48 @@ export function DealsSection({
   };
 
   return (
-    <Card className="border bg-card overflow-hidden">
-      <CardHeader className="pb-3">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-              <Sparkles className="h-5 w-5 text-primary" />
-            </div>
-            <div>
-              <CardTitle className="text-lg font-medium">{title}</CardTitle>
-              <p className="text-sm text-muted-foreground mt-0.5">{subtitle}</p>
-            </div>
-          </div>
-          <Button 
-            variant="ghost" 
-            size="sm" 
-            className="text-primary gap-1"
-            onClick={handleViewAll}
-          >
-            عرض الكل
-            <ArrowLeft className="h-4 w-4" />
-          </Button>
-        </div>
-      </CardHeader>
+    <section>
+      {/* Section Header */}
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-lg sm:text-xl font-medium text-foreground">{title}</h2>
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          className="text-primary gap-1 text-sm"
+          onClick={handleViewAll}
+        >
+          عرض الكل
+          <ArrowLeft className="h-4 w-4" />
+        </Button>
+      </div>
       
-      <CardContent className="pt-0">
-        {isLoading ? (
-          <div className="flex items-center justify-center py-8 gap-2">
-            <Loader2 className="h-5 w-5 animate-spin text-primary" />
-            <span className="text-sm text-muted-foreground">جاري تحميل الصفقات...</span>
-          </div>
-        ) : cheapestDeals.length === 0 ? (
-          <div className="text-center py-8">
-            <Plane className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
-            <p className="text-sm text-muted-foreground">لا توجد رحلات متاحة حالياً</p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            {cheapestDeals.map((flight) => (
-              <DealCard
-                key={flight.id}
-                flight={flight}
-                airportCode={airportCode}
-                airportName={airportName}
-                onClick={() => handleDealClick(flight)}
-              />
-            ))}
-          </div>
-        )}
-      </CardContent>
-    </Card>
+      {/* Deals Grid */}
+      {isLoading ? (
+        <div className="flex items-center justify-center py-12 gap-2">
+          <Loader2 className="h-5 w-5 animate-spin text-primary" />
+          <span className="text-sm text-muted-foreground">جاري تحميل الصفقات...</span>
+        </div>
+      ) : cheapestDeals.length === 0 ? (
+        <Card className="border">
+          <CardContent className="text-center py-12">
+            <Plane className="h-10 w-10 text-muted-foreground mx-auto mb-3" />
+            <p className="text-muted-foreground">لا توجد رحلات متاحة حالياً</p>
+          </CardContent>
+        </Card>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          {cheapestDeals.map((flight) => (
+            <DealCard
+              key={flight.id}
+              flight={flight}
+              airportCode={airportCode}
+              airportName={airportName}
+              onClick={() => handleDealClick(flight)}
+            />
+          ))}
+        </div>
+      )}
+    </section>
   );
 }
 
