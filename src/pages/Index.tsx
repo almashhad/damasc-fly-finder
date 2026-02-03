@@ -18,8 +18,8 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { useDestinations, useDamascusFlights, useAllFlightsForAirport } from "@/hooks/useFlights";
-import { DealsSection } from "@/components/flight/DealsSection";
+import { useDestinations, useDamascusFlights } from "@/hooks/useFlights";
+import { DealsBanner } from "@/components/flight/DealsSection";
 import type { Flight, Destination } from "@/types/flight";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
@@ -63,10 +63,6 @@ const Index = () => {
     tripDirection === 'to' ? 'to' : 'from',
     userLocation || undefined
   );
-  
-  // Flights for deals sections
-  const { data: damascusFlights, isLoading: damascusLoading } = useAllFlightsForAirport('DAM');
-  const { data: aleppoFlights, isLoading: aleppoLoading } = useAllFlightsForAirport('ALP');
 
   // Non-Damascus destinations
   const otherDestinations = useMemo(() => {
@@ -532,26 +528,18 @@ const Index = () => {
         </div>
       </div>
 
-      {/* Deals Sections */}
-      <main className="max-w-5xl mx-auto px-4 mt-12 pb-16 space-y-8" ref={dealsSectionRef}>
-        {/* Damascus Deals */}
-        <DealsSection
-          title="أرخص الرحلات من وإلى دمشق هذا الشهر"
-          airportCode="DAM"
-          airportName="دمشق"
-          flights={damascusFlights || []}
-          isLoading={damascusLoading}
-          type="damascus"
+      {/* Deals Banners */}
+      <main className="max-w-4xl mx-auto px-4 mt-12 pb-16 space-y-4" ref={dealsSectionRef}>
+        {/* Damascus Deals Banner */}
+        <DealsBanner 
+          cityName="دمشق"
+          onExplore={() => navigate('/search?type=to_damascus&airport=DAM')}
         />
         
-        {/* Aleppo Deals */}
-        <DealsSection
-          title="أرخص الرحلات من وإلى حلب هذا الشهر"
-          airportCode="ALP"
-          airportName="حلب"
-          flights={aleppoFlights || []}
-          isLoading={aleppoLoading}
-          type="aleppo"
+        {/* Aleppo Deals Banner */}
+        <DealsBanner 
+          cityName="حلب"
+          onExplore={() => navigate('/search?type=to_aleppo&airport=ALP')}
         />
       </main>
 
