@@ -1,170 +1,48 @@
-import { Plane, ArrowLeft, Loader2 } from "lucide-react";
+import { Sparkles } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import type { Flight } from "@/types/flight";
-import { useNavigate } from "react-router-dom";
 
-interface DealsSectionProps {
-  title: string;
-  airportCode: string;
-  airportName: string;
-  flights: Flight[];
-  isLoading: boolean;
-  type: 'damascus' | 'aleppo';
+interface DealsBannerProps {
+  cityName: string;
+  onExplore: () => void;
 }
 
-export function DealsSection({
-  title,
-  airportCode,
-  airportName,
-  flights,
-  isLoading,
-  type,
-}: DealsSectionProps) {
-  const navigate = useNavigate();
-
-  // Get unique routes with cheapest prices (max 6)
-  const cheapestDeals = (() => {
-    if (!flights || flights.length === 0) return [];
-    
-    const routeMap = new Map<string, Flight>();
-    
-    flights.forEach((flight) => {
-      // Create a unique key for each route (origin-destination pair)
-      const routeKey = `${flight.origin?.airport_code}-${flight.destination?.airport_code}`;
-      
-      const existing = routeMap.get(routeKey);
-      if (!existing || (flight.price_usd && existing.price_usd && flight.price_usd < existing.price_usd)) {
-        routeMap.set(routeKey, flight);
-      }
-    });
-    
-    return Array.from(routeMap.values())
-      .filter(f => f.price_usd)
-      .sort((a, b) => (a.price_usd || 999) - (b.price_usd || 999))
-      .slice(0, 6);
-  })();
-
-  const handleViewAll = () => {
-    const params = new URLSearchParams();
-    params.set("type", `to_${type}`);
-    params.set("airport", airportCode);
-    navigate(`/search?${params.toString()}`);
-  };
-
-  const handleDealClick = (flight: Flight) => {
-    const isTo = flight.destination?.airport_code === airportCode;
-    const otherCity = isTo ? flight.origin?.airport_code : flight.destination?.airport_code;
-    
-    const params = new URLSearchParams();
-    params.set("type", isTo ? `to_${type}` : `from_${type}`);
-    params.set("airport", airportCode);
-    if (otherCity) params.set("destination", otherCity);
-    navigate(`/search?${params.toString()}`);
-  };
-
+export function DealsBanner({ cityName, onExplore }: DealsBannerProps) {
   return (
-    <section>
-      {/* Section Header */}
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg sm:text-xl font-medium text-foreground">{title}</h2>
-        <Button 
-          variant="ghost" 
-          size="sm" 
-          className="text-primary gap-1 text-sm"
-          onClick={handleViewAll}
-        >
-          عرض الكل
-          <ArrowLeft className="h-4 w-4" />
-        </Button>
-      </div>
-      
-      {/* Deals Grid */}
-      {isLoading ? (
-        <div className="flex items-center justify-center py-12 gap-2">
-          <Loader2 className="h-5 w-5 animate-spin text-primary" />
-          <span className="text-sm text-muted-foreground">جاري تحميل الصفقات...</span>
-        </div>
-      ) : cheapestDeals.length === 0 ? (
-        <Card className="border">
-          <CardContent className="text-center py-12">
-            <Plane className="h-10 w-10 text-muted-foreground mx-auto mb-3" />
-            <p className="text-muted-foreground">لا توجد رحلات متاحة حالياً</p>
-          </CardContent>
-        </Card>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-          {cheapestDeals.map((flight) => (
-            <DealCard
-              key={flight.id}
-              flight={flight}
-              airportCode={airportCode}
-              airportName={airportName}
-              onClick={() => handleDealClick(flight)}
-            />
-          ))}
-        </div>
-      )}
-    </section>
-  );
-}
-
-interface DealCardProps {
-  flight: Flight;
-  airportCode: string;
-  airportName: string;
-  onClick: () => void;
-}
-
-function DealCard({ flight, airportCode, airportName, onClick }: DealCardProps) {
-  const isToSyria = flight.destination?.airport_code === airportCode;
-  
-  const fromCity = isToSyria ? flight.origin?.city_ar : airportName;
-  const toCity = isToSyria ? airportName : flight.destination?.city_ar;
-  const fromCode = isToSyria ? flight.origin?.airport_code : airportCode;
-  const toCode = isToSyria ? airportCode : flight.destination?.airport_code;
-
-  return (
-    <button
-      onClick={onClick}
-      className="group flex flex-col p-3 rounded-lg border border-border bg-background hover:bg-muted/50 hover:border-primary/30 transition-all text-right w-full"
-    >
-      {/* Route */}
-      <div className="flex items-center gap-2 mb-2">
-        <div className="flex items-center gap-1.5 text-sm">
-          <span className="font-medium text-foreground">{fromCity}</span>
-          <span className="text-muted-foreground text-xs">({fromCode})</span>
-        </div>
-        <ArrowLeft className="h-3.5 w-3.5 text-muted-foreground flex-shrink-0" />
-        <div className="flex items-center gap-1.5 text-sm">
-          <span className="font-medium text-foreground">{toCity}</span>
-          <span className="text-muted-foreground text-xs">({toCode})</span>
-        </div>
-      </div>
-      
-      {/* Airline & Price */}
-      <div className="flex items-center justify-between mt-auto">
-        <div className="flex items-center gap-2">
-          <div className="w-6 h-6 rounded bg-muted flex items-center justify-center">
-            <span className="text-xs font-medium text-muted-foreground">
-              {flight.airline?.code}
-            </span>
+    <Card className="border-0 bg-gradient-to-l from-[hsl(210,100%,97%)] to-[hsl(210,100%,98%)] shadow-sm">
+      <CardContent className="p-4 sm:p-5">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+          {/* Icon */}
+          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center flex-shrink-0">
+            <Sparkles className="h-5 w-5 text-white" />
           </div>
-          <span className="text-xs text-muted-foreground">{flight.airline?.name_ar}</span>
+          
+          {/* Content */}
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 mb-1 flex-wrap">
+              <h3 className="text-base font-medium text-foreground">
+                أرخص الرحلات من وإلى {cityName} هذا الشهر
+              </h3>
+              <Badge className="bg-blue-100 text-blue-700 hover:bg-blue-100 text-xs">
+                صفقات
+              </Badge>
+            </div>
+            <p className="text-sm text-muted-foreground">
+              اكتشف أفضل الأسعار للرحلات الجوية من وإلى مطار {cityName} الدولي
+            </p>
+          </div>
+          
+          {/* Button */}
+          <Button 
+            variant="outline"
+            className="flex-shrink-0 bg-white hover:bg-gray-50 border-gray-200 text-primary font-medium"
+            onClick={onExplore}
+          >
+            استكشاف الصفقات
+          </Button>
         </div>
-        
-        <div className="flex items-center gap-1">
-          <span className="text-lg font-semibold text-success">
-            ${flight.price_usd}
-          </span>
-          {flight.stops === 0 && (
-            <Badge variant="secondary" className="text-[10px] px-1.5 py-0">
-              مباشرة
-            </Badge>
-          )}
-        </div>
-      </div>
-    </button>
+      </CardContent>
+    </Card>
   );
 }
