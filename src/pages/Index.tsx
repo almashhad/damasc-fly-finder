@@ -121,9 +121,11 @@ const Index = () => {
   };
 
   const handleSearch = () => {
-    const searchType = tripDirection === 'to' ? 'to_damascus' : 'from_damascus';
+    const airportCode = activeTab === 'damascus' ? 'DAM' : 'ALP';
+    const searchType = tripDirection === 'to' ? `to_${activeTab}` : `from_${activeTab}`;
     const params = new URLSearchParams();
     params.set("type", searchType);
+    params.set("airport", airportCode);
     if (userLocation) {
       params.set("destination", userLocation);
     }
@@ -184,9 +186,6 @@ const Index = () => {
               <div className="flex items-center gap-2">
                 <Plane className="h-4 w-4" />
                 من وإلى حلب
-                <Badge variant="secondary" className="text-[10px] px-1.5 py-0 h-4">
-                  قريباً
-                </Badge>
               </div>
               {activeTab === 'aleppo' && (
                 <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-primary rounded-t-full" />
@@ -297,26 +296,9 @@ const Index = () => {
           </h1>
         </div>
 
-        {/* Search Card */}
+        {/* Search Card - Same design for Damascus and Aleppo */}
         <div className="relative max-w-4xl mx-auto px-4 pb-8">
-          {activeTab === 'aleppo' ? (
-            // Aleppo Coming Soon Card
-            <Card className="shadow-lg border-0 bg-card">
-              <CardContent className="py-16 text-center">
-                <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">
-                  <Plane className="h-8 w-8 text-muted-foreground" />
-                </div>
-                <h3 className="text-xl font-medium text-foreground mb-2">
-                  رحلات حلب قريباً
-                </h3>
-                <p className="text-muted-foreground max-w-md mx-auto">
-                  نعمل على إضافة رحلات من وإلى مطار حلب الدولي. سيتم إضافتها قريباً.
-                </p>
-              </CardContent>
-            </Card>
-          ) : (
-            // Damascus Search Card - Clean Google Flights Style
-            <Card className="shadow-lg border border-border bg-card rounded-lg overflow-hidden">
+          <Card className="shadow-lg border border-border bg-card rounded-lg overflow-hidden">
               {/* Top Row - Trip Options */}
               <div className="flex items-center gap-2 px-4 py-3 border-b border-border">
                 {/* Trip Type */}
@@ -430,7 +412,7 @@ const Index = () => {
                         placeholder="من أين؟"
                       />
                     ) : (
-                      <span className="text-foreground font-medium">دمشق</span>
+                      <span className="text-foreground font-medium">{airportName}</span>
                     )}
                   </div>
 
@@ -473,7 +455,7 @@ const Index = () => {
                         placeholder="إلى أين؟"
                       />
                     ) : (
-                      <span className="text-foreground font-medium">دمشق</span>
+                      <span className="text-foreground font-medium">{airportName}</span>
                     )}
                   </div>
                 </div>
@@ -541,26 +523,24 @@ const Index = () => {
                   </Button>
                 </div>
               </div>
-            </Card>
-          )}
+          </Card>
         </div>
       </div>
 
-      {/* Deals Section - Only show for Damascus */}
-      {activeTab === 'damascus' && (
-        <main className="max-w-4xl mx-auto px-4 mt-12 pb-16">
-          {/* Deals Banner */}
-          <DealsCard 
-            ref={dealsSectionRef}
-            userCity={userDestination?.city_ar || 'موقعك'}
-            cheapestPrice={cheapestFlight?.price_usd}
-            currentMonth={currentMonth}
-            tripDirection={tripDirection}
-            isLoading={flightsLoading}
-            onExplore={handleSearch}
-          />
-        </main>
-      )}
+      {/* Deals Section - Show for both Damascus and Aleppo */}
+      <main className="max-w-4xl mx-auto px-4 mt-12 pb-16">
+        {/* Deals Banner */}
+        <DealsCard 
+          ref={dealsSectionRef}
+          userCity={userDestination?.city_ar || 'موقعك'}
+          cheapestPrice={cheapestFlight?.price_usd}
+          currentMonth={currentMonth}
+          tripDirection={tripDirection}
+          isLoading={flightsLoading}
+          onExplore={handleSearch}
+          airportName={airportName}
+        />
+      </main>
 
       {/* Simple Footer */}
       <footer className="py-6 text-center border-t border-border mt-auto">
@@ -642,10 +622,11 @@ const DealsCard = forwardRef<HTMLDivElement, {
   tripDirection: 'to' | 'from';
   isLoading: boolean;
   onExplore: () => void;
-}>(({ userCity, cheapestPrice, currentMonth, tripDirection, isLoading, onExplore }, ref) => {
+  airportName?: string;
+}>(({ userCity, cheapestPrice, currentMonth, tripDirection, isLoading, onExplore, airportName = 'دمشق' }, ref) => {
   const directionText = tripDirection === 'to' 
-    ? `من ${userCity} إلى دمشق`
-    : `من دمشق إلى ${userCity}`;
+    ? `من ${userCity} إلى ${airportName}`
+    : `من ${airportName} إلى ${userCity}`;
 
   return (
     <div ref={ref}>
