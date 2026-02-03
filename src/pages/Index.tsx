@@ -199,62 +199,94 @@ const Index = () => {
       {/* Hero Section with Syrian Illustration - Seamless blend */}
       <div className="relative">
         {/* Hero Image - Seamlessly blended with background */}
-        <div className="w-full flex justify-center relative overflow-hidden" style={{ minHeight: '160px' }}>
-          {/* Strong gradient overlays for complete seamless blending */}
+        <div className="w-full flex justify-center relative overflow-hidden">
+          {/* Gradient overlays for seamless blending (mobile-friendly) */}
           <div className="absolute inset-0 pointer-events-none z-10">
-            {/* Left fade - stronger */}
-            <div 
-              className="absolute top-0 bottom-0 left-0 w-[30vw] max-w-[520px]" 
-              style={{
-                background:
-                  'linear-gradient(to right, hsl(var(--background)) 0%, hsl(var(--background)) 78%, transparent 100%)',
-                filter: 'blur(0.5px)',
-              }}
-            />
-            {/* Right fade - stronger */}
-            <div 
-              className="absolute top-0 bottom-0 right-0 w-[30vw] max-w-[520px]" 
-              style={{
-                background:
-                  'linear-gradient(to left, hsl(var(--background)) 0%, hsl(var(--background)) 78%, transparent 100%)',
-                filter: 'blur(0.5px)',
-              }}
-            />
-            {/* Bottom fade - stronger */}
-            <div 
-              className="absolute bottom-0 left-0 right-0 h-16 sm:h-20" 
-              style={{ background: 'linear-gradient(to top, hsl(var(--background)) 0%, hsl(var(--background)) 40%, transparent 100%)' }}
-            />
+            {/* Mobile fades: lighter so the image stays fully visible */}
+            <div className="sm:hidden">
+              <div
+                className="absolute top-0 bottom-0 left-0 w-14"
+                style={{
+                  background:
+                    'linear-gradient(to right, hsl(var(--background)) 0%, hsl(var(--background)) 40%, transparent 100%)',
+                }}
+              />
+              <div
+                className="absolute top-0 bottom-0 right-0 w-14"
+                style={{
+                  background:
+                    'linear-gradient(to left, hsl(var(--background)) 0%, hsl(var(--background)) 40%, transparent 100%)',
+                }}
+              />
+              <div
+                className="absolute bottom-0 left-0 right-0 h-10"
+                style={{
+                  background:
+                    'linear-gradient(to top, hsl(var(--background)) 0%, hsl(var(--background)) 22%, transparent 100%)',
+                }}
+              />
+              <div
+                className="absolute top-0 left-0 right-0 h-3"
+                style={{ background: 'linear-gradient(to bottom, hsl(var(--background)) 0%, transparent 100%)' }}
+              />
+            </div>
 
-            {/* Bottom-left corner fade (trees area) */}
-            <div
-              className="absolute bottom-0 left-0 w-40 sm:w-56 md:w-72 h-28 sm:h-36 md:h-44"
-              style={{
-                background:
-                  'radial-gradient(ellipse at bottom left, hsl(var(--background)) 0%, hsl(var(--background)) 62%, transparent 78%)',
-              }}
-            />
-            {/* Bottom-right corner fade (trees area) */}
-            <div
-              className="absolute bottom-0 right-0 w-40 sm:w-56 md:w-72 h-28 sm:h-36 md:h-44"
-              style={{
-                background:
-                  'radial-gradient(ellipse at bottom right, hsl(var(--background)) 0%, hsl(var(--background)) 62%, transparent 78%)',
-              }}
-            />
-
-            {/* Top fade - subtle to show airplane */}
-            <div 
-              className="absolute top-0 left-0 right-0 h-4 sm:h-6" 
-              style={{ background: 'linear-gradient(to bottom, hsl(var(--background)) 0%, transparent 100%)' }}
-            />
+            {/* Desktop/tablet fades: stronger to hide edges (trees corners) */}
+            <div className="hidden sm:block">
+              {/* Left fade - stronger */}
+              <div
+                className="absolute top-0 bottom-0 left-0 w-[30vw] max-w-[520px]"
+                style={{
+                  background:
+                    'linear-gradient(to right, hsl(var(--background)) 0%, hsl(var(--background)) 78%, transparent 100%)',
+                  filter: 'blur(0.5px)',
+                }}
+              />
+              {/* Right fade - stronger */}
+              <div
+                className="absolute top-0 bottom-0 right-0 w-[30vw] max-w-[520px]"
+                style={{
+                  background:
+                    'linear-gradient(to left, hsl(var(--background)) 0%, hsl(var(--background)) 78%, transparent 100%)',
+                  filter: 'blur(0.5px)',
+                }}
+              />
+              {/* Bottom fade - stronger */}
+              <div
+                className="absolute bottom-0 left-0 right-0 h-16 sm:h-20"
+                style={{
+                  background:
+                    'linear-gradient(to top, hsl(var(--background)) 0%, hsl(var(--background)) 40%, transparent 100%)',
+                }}
+              />
+              {/* Bottom-left corner fade (trees area) */}
+              <div
+                className="absolute bottom-0 left-0 w-40 sm:w-56 md:w-72 h-28 sm:h-36 md:h-44"
+                style={{
+                  background:
+                    'radial-gradient(ellipse at bottom left, hsl(var(--background)) 0%, hsl(var(--background)) 62%, transparent 78%)',
+                }}
+              />
+              {/* Bottom-right corner fade (trees area) */}
+              <div
+                className="absolute bottom-0 right-0 w-40 sm:w-56 md:w-72 h-28 sm:h-36 md:h-44"
+                style={{
+                  background:
+                    'radial-gradient(ellipse at bottom right, hsl(var(--background)) 0%, hsl(var(--background)) 62%, transparent 78%)',
+                }}
+              />
+              {/* Top fade - subtle to show airplane */}
+              <div
+                className="absolute top-0 left-0 right-0 h-4 sm:h-6"
+                style={{ background: 'linear-gradient(to bottom, hsl(var(--background)) 0%, transparent 100%)' }}
+              />
+            </div>
           </div>
-          
-          <img 
-            src={syriaHeroImage} 
+
+          <img
+            src={syriaHeroImage}
             alt="رحلات سوريا - معالم دمشق وحلب"
-            className="w-full max-w-5xl h-auto object-contain"
-            style={{ maxHeight: '220px' }}
+            className="w-full max-w-5xl h-auto object-contain max-h-[240px] sm:max-h-[220px]"
           />
         </div>
 
