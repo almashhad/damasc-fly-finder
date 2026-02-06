@@ -19,7 +19,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { useDestinations, useDamascusFlights } from "@/hooks/useFlights";
-import { DealsBanner } from "@/components/flight/DealsSection";
+import { ExploreSection } from "@/components/flight/DealsSection";
 import type { Flight, Destination } from "@/types/flight";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
@@ -531,20 +531,13 @@ const Index = () => {
         </div>
       </div>
 
-      {/* Deals Banners */}
-      <main className="max-w-4xl mx-auto px-4 mt-12 pb-16 space-y-4" ref={dealsSectionRef}>
-        {/* Damascus Deals Banner */}
-        <DealsBanner 
-          cityName="دمشق"
-          onExplore={() => navigate('/search?type=to_damascus&airport=DAM')}
+      {/* Explore Section */}
+      <div ref={dealsSectionRef}>
+        <ExploreSection
+          onExploreDamascus={() => navigate('/search?type=to_damascus&airport=DAM')}
+          onExploreAleppo={() => navigate('/search?type=to_aleppo&airport=ALP')}
         />
-        
-        {/* Aleppo Deals Banner */}
-        <DealsBanner 
-          cityName="حلب"
-          onExplore={() => navigate('/search?type=to_aleppo&airport=ALP')}
-        />
-      </main>
+      </div>
 
       {/* Simple Footer */}
       <footer className="py-6 text-center border-t border-border mt-auto">
