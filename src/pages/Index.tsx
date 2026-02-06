@@ -327,10 +327,13 @@ const Index = () => {
 
         {/* EXPLORE */}
         <div className="syria-explore-sec">
-          <h2 className="syria-explore-h2">استكشف الرحلات</h2>
+          <div className="syria-explore-header">
+            <h2 className="syria-explore-h2">🗺️ استكشف أرخص الرحلات</h2>
+            <p className="syria-explore-desc">اعرف أفضل وقت للسفر بأقل سعر من خلال تقويم الأسعار الشهري</p>
+          </div>
           {[
-            { name: "دمشق", sub: "DAM · مطار دمشق الدولي", type: "to_damascus", code: "DAM" },
-            { name: "حلب", sub: "ALP · مطار حلب الدولي", type: "to_aleppo", code: "ALP" },
+            { name: "دمشق", emoji: "🕌", sub: "مطار دمشق الدولي", code: "DAM", badge: "DAM" },
+            { name: "حلب", emoji: "🏛️", sub: "مطار حلب الدولي", code: "ALP", badge: "ALP" },
           ].map((a, i) => (
             <button
               key={a.name}
@@ -339,15 +342,14 @@ const Index = () => {
               onClick={() => navigate(`/explore/${a.code}`)}
             >
               <div className="syria-explore-avi">
-                <svg width="22" height="22" fill="none" stroke="hsl(217 91% 60%)" strokeWidth="1.5" viewBox="0 0 24 24">
-                  <path d="M17.8 19.2L16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z" />
-                </svg>
+                <span className="syria-explore-emoji">{a.emoji}</span>
               </div>
               <div className="syria-explore-info">
-                <span className="syria-explore-name">أرخص الرحلات من وإلى {a.name}</span>
+                <span className="syria-explore-name">رحلات {a.name}</span>
                 <span className="syria-explore-sub">{a.sub}</span>
               </div>
-              <svg className="syria-explore-chevron" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <div className="syria-explore-badge">{a.badge}</div>
+              <svg className="syria-explore-chevron" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                 <path d="M15 19l-7-7 7-7" />
               </svg>
             </button>
