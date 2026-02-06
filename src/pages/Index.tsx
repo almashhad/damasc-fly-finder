@@ -60,9 +60,14 @@ const Index = () => {
 
   // Detect user location
   useEffect(() => {
+    const controller = new AbortController();
     const detectLocation = async () => {
       try {
-        const response = await fetch('https://ipapi.co/json/');
+        const response = await fetch('https://ipapi.co/json/', { 
+          signal: controller.signal,
+          cache: 'force-cache'
+        });
+        if (!response.ok) throw new Error('Network error');
         const data = await response.json();
         if (data.country_code === 'SY') {
           setUserLocation('DXB');
@@ -79,12 +84,12 @@ const Index = () => {
       }
     };
     detectLocation();
+    return () => controller.abort();
   }, []);
 
   // Ready animation
   useEffect(() => {
-    const t = setTimeout(() => setReady(true), 50);
-    return () => clearTimeout(t);
+    requestAnimationFrame(() => setReady(true));
   }, []);
 
   const userDestination = useMemo(() => {
