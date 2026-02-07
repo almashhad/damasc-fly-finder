@@ -1005,22 +1005,30 @@
   .syria-cta { height: 50px; font-size: 16px; margin-top: 12px; }
   .syria-card { border-radius: 20px; }
   
-  /* Pills improvement */
+  /* Pills - fit all in one row */
   .syria-pills {
-    gap: 6px;
-    padding: 10px 12px;
+    gap: 4px;
+    padding: 8px 10px;
   }
   .syria-logo-sub { font-size: 9px; }
-  .syria-fly-plane svg { width: 16px; height: 16px; }
-  .syria-fly-trail { width: 40px; }
   .syria-pill {
-    height: 34px;
-    padding: 0 12px;
-    font-size: 13px;
+    height: 30px;
+    padding: 0 8px;
+    font-size: 11px;
+    gap: 3px;
+  }
+  .syria-pill.syria-pill-trip {
+    height: 32px;
+    padding: 0 10px;
+    font-size: 12px;
   }
   .syria-pill-sep {
-    margin: 0 2px;
-    height: 18px;
+    margin: 0 1px;
+    height: 16px;
+  }
+  .syria-pill svg {
+    width: 14px;
+    height: 14px;
   }
   
   /* Input values */
@@ -1125,13 +1133,23 @@
   .syria-card-area { margin: 8px auto 0; padding: 0 10px; }
   
   .syria-pill {
-    height: 32px;
-    padding: 0 10px;
-    font-size: 12px;
+    height: 28px;
+    padding: 0 6px;
+    font-size: 10px;
+    gap: 2px;
+  }
+  .syria-pill.syria-pill-trip {
+    height: 30px;
+    padding: 0 8px;
+    font-size: 11px;
   }
   .syria-pills {
-    gap: 5px;
-    padding: 8px 10px;
+    gap: 3px;
+    padding: 7px 8px;
+  }
+  .syria-pill-sep {
+    margin: 0 1px;
+    height: 14px;
   }
   
   .syria-inp { padding: 10px 10px; }
