@@ -149,6 +149,55 @@ export function useAleppoFlights(type: 'from' | 'to', destinationCode?: string) 
   });
 }
 
+// Fetch min price and destination count for airports (for explore section)
+export function useMinPricesForAirports(airportCodes: string[]) {
+  return useQuery({
+    queryKey: ["min-prices", airportCodes],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("flights")
+        .select(`
+          price_usd,
+          origin:destinations!flights_origin_id_fkey(airport_code),
+          destination:destinations!flights_destination_id_fkey(airport_code)
+        `)
+        .eq("is_active", true)
+        .not("price_usd", "is", null);
+
+      if (error) throw error;
+
+      const result: Record<string, { minPrice: number; destinationCount: number }> = {};
+
+      for (const code of airportCodes) {
+        const relevantFlights = (data || []).filter(
+          (f: any) => f.origin?.airport_code === code || f.destination?.airport_code === code
+        );
+
+        const prices = relevantFlights
+          .map((f: any) => f.price_usd)
+          .filter((p: any) => p != null) as number[];
+
+        // Count unique destinations (the other end of the flight)
+        const destCodes = new Set(
+          relevantFlights.map((f: any) =>
+            f.origin?.airport_code === code
+              ? f.destination?.airport_code
+              : f.origin?.airport_code
+          ).filter(Boolean)
+        );
+
+        result[code] = {
+          minPrice: prices.length > 0 ? Math.min(...prices) : 0,
+          destinationCount: destCodes.size,
+        };
+      }
+
+      return result;
+    },
+    enabled: airportCodes.length > 0,
+  });
+}
+
 // Combined flights for deals section (both to and from)
 export function useAllFlightsForAirport(airportCode: string) {
   return useQuery({
