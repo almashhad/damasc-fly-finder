@@ -27,9 +27,17 @@ function formatPrice(price: number | null) {
   return `$${price.toLocaleString()}`;
 }
 
-function SearchFlightCard({ flight }: { flight: Flight }) {
+function SearchFlightCard({ flight, isCheapest }: { flight: Flight; isCheapest?: boolean }) {
   return (
     <div className="search-flight-card">
+      {/* Cheapest Badge */}
+      {isCheapest && (
+        <div className="search-fc-badge">
+          <span>★</span>
+          أرخص سعر
+        </div>
+      )}
+
       {/* Airline */}
       <div className="search-fc-top">
         <div className="search-fc-logo">
@@ -55,9 +63,11 @@ function SearchFlightCard({ flight }: { flight: Flight }) {
             {formatDuration(flight.duration_minutes)}
           </span>
           <div className="search-fc-line">
+            <span className="search-fc-dot" />
             <div className="search-fc-line-bar" />
             <Plane className="h-3.5 w-3.5 -rotate-90" style={{ color: "hsl(217 91% 60%)", margin: "0 4px" }} />
             <div className="search-fc-line-bar" />
+            <span className="search-fc-dot" />
           </div>
           <span className="search-fc-stops">
             {flight.stops === 0 ? "مباشرة" : `${flight.stops} توقف`}
@@ -78,15 +88,18 @@ function SearchFlightCard({ flight }: { flight: Flight }) {
           <span className="search-fc-price-label">للشخص</span>
         </div>
         {flight.airline?.website_url && (
-          <a
-            href={flight.airline.website_url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="search-fc-book"
-          >
-            احجز
-            <ExternalLink className="h-3 w-3" />
-          </a>
+          <div className="search-fc-book-wrap">
+            <a
+              href={flight.airline.website_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="search-fc-book"
+            >
+              احجز
+              <ExternalLink className="h-3 w-3" />
+            </a>
+            <span className="search-fc-book-sub">الموقع الرسمي</span>
+          </div>
         )}
       </div>
     </div>
@@ -226,8 +239,12 @@ export default function SearchPage() {
         </div>
       ) : (
         <div className="search-results">
-          {filteredFlights.map((flight) => (
-            <SearchFlightCard key={flight.id} flight={flight} />
+          {filteredFlights.map((flight, index) => (
+            <SearchFlightCard
+              key={flight.id}
+              flight={flight}
+              isCheapest={sortBy === "price" && index === 0}
+            />
           ))}
         </div>
       )}

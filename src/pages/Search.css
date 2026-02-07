@@ -130,13 +130,29 @@
   background: hsl(0 0% 100%);
   border: 1.5px solid hsl(220 13% 91%);
   border-radius: 16px;
-  padding: 16px;
-  margin-bottom: 10px;
-  transition: all 0.2s;
+  padding: 18px;
+  margin-bottom: 12px;
+  transition: all 0.25s ease;
+  box-shadow: 0 1px 4px hsl(220 13% 91% / 0.5);
 }
 .search-flight-card:hover {
   border-color: hsl(217 91% 80%);
-  box-shadow: 0 4px 16px hsl(217 91% 60% / 0.06);
+  box-shadow: 0 6px 20px hsl(217 91% 60% / 0.1);
+  transform: translateY(-2px);
+}
+
+/* ── CHEAPEST BADGE ── */
+.search-fc-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 12px;
+  border-radius: 100px;
+  background: hsl(142 60% 94%);
+  color: hsl(142 71% 30%);
+  font-size: 11px;
+  font-weight: 600;
+  margin-bottom: 12px;
 }
 
 /* Card top: airline info */
@@ -225,8 +241,15 @@
 }
 .search-fc-line-bar {
   flex: 1;
-  height: 1px;
-  background: hsl(220 13% 85%);
+  height: 0;
+  border-top: 2px dashed hsl(220 13% 82%);
+}
+.search-fc-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: hsl(217 91% 60%);
+  flex-shrink: 0;
 }
 .search-fc-stops {
   font-size: 11px;
@@ -253,24 +276,40 @@
   font-weight: 400;
   margin-right: 4px;
 }
+.search-fc-book-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
 .search-fc-book {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 8px 18px;
+  padding: 8px 20px;
   border-radius: 100px;
   background: hsl(217 91% 60%);
   color: hsl(0 0% 100%);
   font-size: 13px;
   font-weight: 600;
   text-decoration: none;
-  transition: background 0.2s;
+  transition: all 0.2s ease;
   border: none;
   cursor: pointer;
   font-family: inherit;
 }
 .search-fc-book:hover {
   background: hsl(217 91% 55%);
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px hsl(217 91% 60% / 0.25);
+}
+.search-fc-book:active {
+  transform: scale(0.97);
+}
+.search-fc-book-sub {
+  font-size: 10px;
+  color: hsl(215 16% 62%);
+  font-weight: 400;
 }
 
 /* ── NO FLIGHTS ── */
