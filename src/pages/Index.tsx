@@ -183,13 +183,13 @@ const Index = () => {
             {/* Option pills */}
             <div className="syria-pills">
               <button
-                className={`syria-pill ${trip === "oneway" ? "syria-pill-on" : ""}`}
+                className={`syria-pill syria-pill-trip ${trip === "oneway" ? "syria-pill-on" : ""}`}
                 onClick={() => setTrip("oneway")}
               >
                 ذهاب فقط
               </button>
               <button
-                className={`syria-pill ${trip === "roundtrip" ? "syria-pill-on" : ""}`}
+                className={`syria-pill syria-pill-trip ${trip === "roundtrip" ? "syria-pill-on" : ""}`}
                 onClick={() => setTrip("roundtrip")}
               >
                 ذهاب وعودة
