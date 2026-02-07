@@ -1,91 +1,89 @@
 
+# تحسين الهيدر - إضافة طائرة متحركة وعبارة احترافية
 
-# تحسين تصميم الهاتف - جعل زر البحث مرئياً بدون تمرير
+## الفكرة
+تحويل منطقة الشعار والهيدر من شكل بسيط إلى تصميم احترافي ومميز يتضمن:
 
-## المشكلة الحالية (من الصورة المرفقة)
-على شاشة الهاتف، العناصر تاخذ مساحة كبيرة جدا بالترتيب التالي:
-1. الهيدر (شعار + تبويبات) ~ 110px
-2. صورة سوريا التوضيحية ~ 250px+ (كبيرة جدا)
-3. العنوان والوصف ~ 80px
-4. بطاقة البحث (pills + مسار + تاريخ + زر) ~ 350px+
+1. **طائرة SVG متحركة** تطير عبر الهيدر بمسار منحني مع خط متقطع خلفها (flight trail)
+2. **تأثير نبض مضيء** حول أيقونة الشعار (pulsing glow ring)
+3. **عبارة قوية** تحت اسم "رحلات سوريا" مثل: "بوابتك الجوية" بحجم صغير
+4. **استبدال emoji** بأيقونة SVG احترافية مع حركة طفيفة (float)
 
-النتيجة: زر "البحث عن رحلات" يظهر نصفه فقط ويحتاج تمرير لرؤيته بالكامل.
+### الشكل المقترح للهيدر
 
-## الحل: ضغط المسافات وتصغير الصورة على الموبايل
-
-### التغييرات المطلوبة
-
-#### 1. تصغير صورة الهيرو على الموبايل
-- اضافة `max-height` للصورة على شاشات اصغر من 480px
-- تصغيرها من الحجم الكامل الى حوالي 160px كحد اقصى
-- على شاشات 360px واقل: تصغيرها الى 130px
-- استخدام `object-fit: cover` و `object-position: center bottom` للحفاظ على الجزء الاهم من الصورة
-
-#### 2. تقليل المسافات في النصوص
-- `.syria-hero`: تقليل padding العلوي والسفلي
-- `.syria-h1`: تصغير حجم الخط قليلا على الموبايل (22px بدل 24px)
-- `.syria-hero-sub`: تقليل margin-top
-
-#### 3. تقليل المسافات في بطاقة البحث
-- `.syria-card-area`: تقليل `margin-top` من 20px الى 12px
-- `.syria-form`: تقليل padding الداخلي
-- `.syria-inp`: تقليل padding العمودي من 14px الى 12px
-- `.syria-date-inp`: تقليل padding العمودي
-- `.syria-date-boxes`: تقليل margin-top من 12px الى 8px
-- `.syria-cta`: تقليل margin-top من 20px الى 14px وتصغير الارتفاع الى 50px
-
-#### 4. ضغط الهيدر قليلا
-- `.syria-logo`: تقليل ارتفاع الشعار من 60px الى 50px على الموبايل
-- `.syria-nav-btn`: تقليل padding العمودي من 16px الى 12px
+```text
+    ╔════════════════════════════════════════╗
+    ║  [✈ متحرك]  رحلات سوريا              ║
+    ║              بوابتك الجوية             ║
+    ║         ✈------>  (طائرة عابرة)        ║
+    ║  ═══════════════════════════════════   ║
+    ║  [ من وإلى دمشق ]  [ من وإلى حلب ]   ║
+    ╚════════════════════════════════════════╝
+```
 
 ---
 
 ## التفاصيل التقنية
 
-### تعديل `src/pages/Index.css`
+### 1. تعديل `src/pages/Index.tsx`
 
-**تغييرات على القسم الاساسي (بدون media query):**
-لا تغييرات - نحافظ على تصميم الديسكتوب كما هو.
+**تغييرات في منطقة الشعار (سطر 130-135):**
 
-**تغييرات داخل `@media (max-width: 480px)`:**
+- استبدال `✈` emoji بأيقونة SVG مخصصة للطائرة داخل `.syria-logo-mark`
+- اضافة عنصر `<span className="syria-logo-sub">بوابتك الجوية</span>` تحت اسم "رحلات سوريا"
+- لف اسم الشعار والعبارة في div عمودي
 
-| العنصر | الحالي | الجديد | السبب |
-|--------|--------|--------|-------|
-| `.syria-hero-img-wrap` | بدون حد اقصى | `max-height: 160px; overflow: hidden` | تصغير الصورة |
-| `.syria-hero-img` | `height: auto` | `object-fit: cover; object-position: center bottom; height: 160px` | الحفاظ على الجزء المهم |
-| `.syria-logo` | `height: 60px` | `height: 50px` | ضغط الهيدر |
-| `.syria-nav-btn` | `padding: 16px 0` | `padding: 12px 0` | ضغط التبويبات |
-| `.syria-hero` | `padding: 12px 20px 4px` | `padding: 8px 16px 2px` | ضغط النص |
-| `.syria-h1` | `font-size: 24px` | `font-size: 22px` | تصغير العنوان |
-| `.syria-hero-sub` | `margin-top: 8px` | `margin-top: 4px` | تقليل المسافة |
-| `.syria-card-area` | `margin: 20px auto 0` | `margin: 10px auto 0` | تقريب البطاقة |
-| `.syria-form` | `padding: 14px 14px 20px` | `padding: 10px 12px 16px` | ضغط النموذج |
-| `.syria-inp` | `padding: 14px 14px` | `padding: 12px 12px` | ضغط الحقول |
-| `.syria-date-inp` | `padding: 14px 14px` | `padding: 12px 12px` | ضغط التاريخ |
-| `.syria-date-boxes` | `margin-top: 12px` | `margin-top: 8px` | تقليل المسافة |
-| `.syria-cta` | `height: 54px; margin-top: 20px` | `height: 50px; margin-top: 12px` | ضغط الزر |
+**اضافة طائرة متحركة عابرة:**
+- اضافة عنصر `<div className="syria-fly-plane">` داخل `.syria-hdr-in` (قبل الاغلاق)
+- يحتوي على SVG صغير لطائرة بخط متقطع خلفها
+- يطير من اليمين إلى اليسار كل 8 ثوانٍ (مناسب لـ RTL)
 
-**تغييرات داخل `@media (max-width: 360px)`:**
+### 2. تعديل `src/pages/Index.css`
 
-| العنصر | الحالي | الجديد |
-|--------|--------|--------|
-| `.syria-hero-img-wrap` | - | `max-height: 130px` |
-| `.syria-hero-img` | - | `height: 130px` |
-| `.syria-logo` | - | `height: 46px` |
-| `.syria-nav-btn` | - | `padding: 10px 0; font-size: 12px` |
-| `.syria-card-area` | `padding: 0 10px` | `margin: 8px auto 0; padding: 0 10px` |
-| `.syria-cta` | `height: 50px` | `height: 48px; margin-top: 10px` |
+**أيقونة الشعار المحسنة:**
 
-### النتيجة المتوقعة
+| الكلاس | الوصف |
+|--------|-------|
+| `.syria-logo-mark` | اضافة `animation: syria-logo-float 3s ease-in-out infinite` للحركة الطافية + `position: relative` |
+| `.syria-logo-mark::after` | حلقة نبض مضيئة (pulsing ring) - `border-radius: 14px`, `border: 2px solid hsla(var(--primary) / .3)`, `animation: syria-logo-pulse 2.5s ease infinite` |
+| `.syria-logo-name-wrap` | wrapper جديد بـ `display: flex; flex-direction: column` |
+| `.syria-logo-sub` | عبارة "بوابتك الجوية" - `font-size: 10px`, `color: hsl(var(--muted-foreground))`, `font-weight: 500`, `letter-spacing: 0.5px`, `margin-top: -2px` |
 
-على شاشة هاتف عادية (390px):
-- الهيدر: ~95px (بدل ~110px) = وفرنا 15px
-- الصورة: ~160px (بدل ~250px) = وفرنا 90px
-- النص: ~55px (بدل ~80px) = وفرنا 25px
-- البطاقة اقرب بـ 10px
-- المسافات الداخلية اصغر بـ 30px تقريبا
+**الطائرة العابرة:**
 
-المجموع: توفير حوالي 170px من المساحة العمودية، مما يجعل زر "البحث عن رحلات" مرئيا بالكامل بدون تمرير.
+| الكلاس | الوصف |
+|--------|-------|
+| `.syria-fly-plane` | `position: absolute`, `top: 50%`, `pointer-events: none`, `animation: syria-fly 12s linear infinite` |
+| `.syria-fly-trail` | خط متقطع خلف الطائرة - `stroke-dasharray: 4 6`, `stroke: hsla(var(--primary) / .15)`, `width: 60px` |
+
+**Keyframes جديدة:**
+
+```text
+@keyframes syria-logo-float
+  0%, 100%: translateY(0)
+  50%: translateY(-2px)
+
+@keyframes syria-logo-pulse
+  0%, 100%: opacity 0, scale 1
+  50%: opacity 1, scale 1.15
+
+@keyframes syria-fly
+  0%: translateX(100%) - بداية من خارج الشاشة يمين
+  100%: translateX(-200%) - خروج من يسار الشاشة
+```
+
+**ملاحظات على الحركة:**
+- الطائرة العابرة شفافة جزئياً (`opacity: 0.2`) لتكون خلفية وليست مشتتة
+- تأخير بداية الحركة 3 ثوانٍ بعد تحميل الصفحة (`animation-delay: 3s`)
+- على الموبايل: تصغير حجم الطائرة العابرة وتسريع الحركة قليلاً
+
+**تعديلات responsive (480px):**
+- `.syria-logo-sub`: `font-size: 9px`
+- `.syria-fly-plane svg`: `width: 16px; height: 16px` (بدل 20px)
+
+**تعديلات responsive (360px):**
+- `.syria-logo-sub`: `font-size: 8px`
+- اخفاء الطائرة العابرة على الشاشات الاصغر من 360px لتجنب التشتيت
 
 ---
 
@@ -93,7 +91,5 @@
 
 | الملف | التغيير |
 |-------|---------|
-| `src/pages/Index.css` | تعديل media queries للموبايل (480px و 360px) لضغط المسافات وتصغير الصورة |
-
-ملف واحد فقط يحتاج تعديل - جميع التغييرات في CSS.
-
+| `src/pages/Index.tsx` | استبدال emoji بـ SVG + اضافة عبارة "بوابتك الجوية" + طائرة متحركة عابرة |
+| `src/pages/Index.css` | keyframes للطفو والنبض والطيران + كلاسات جديدة + responsive |
