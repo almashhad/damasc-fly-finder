@@ -1,6 +1,6 @@
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { useState, useMemo, useEffect } from "react";
-import { ArrowRight, Loader2, Plane, Clock, ExternalLink } from "lucide-react";
+import { ArrowRight, ArrowLeft, Loader2, Plane, Clock, ExternalLink, ChevronUp } from "lucide-react";
 import { useDamascusFlights, useAleppoFlights } from "@/hooks/useFlights";
 import type { Flight } from "@/types/flight";
 import "./Search.css";
@@ -27,9 +27,12 @@ function formatPrice(price: number | null) {
   return `$${price.toLocaleString()}`;
 }
 
-function SearchFlightCard({ flight, isCheapest }: { flight: Flight; isCheapest?: boolean }) {
+function SearchFlightCard({ flight, isCheapest, index = 0 }: { flight: Flight; isCheapest?: boolean; index?: number }) {
   return (
-    <div className="search-flight-card">
+    <div
+      className={`search-flight-card search-flight-fadein${isCheapest ? " search-flight-card-best" : ""}`}
+      style={{ animationDelay: `${index * 60}ms` }}
+    >
       {/* Cheapest Badge */}
       {isCheapest && (
         <div className="search-fc-badge">
@@ -88,18 +91,15 @@ function SearchFlightCard({ flight, isCheapest }: { flight: Flight; isCheapest?:
           <span className="search-fc-price-label">للشخص</span>
         </div>
         {flight.airline?.website_url && (
-          <div className="search-fc-book-wrap">
-            <a
-              href={flight.airline.website_url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="search-fc-book"
-            >
-              احجز
-              <ExternalLink className="h-3 w-3" />
-            </a>
-            <span className="search-fc-book-sub">الموقع الرسمي</span>
-          </div>
+          <a
+            href={flight.airline.website_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="search-fc-book"
+          >
+            {flight.price_usd ? "احجز" : "استعلم عن السعر"}
+            <ExternalLink className="h-3 w-3" />
+          </a>
         )}
       </div>
     </div>
@@ -174,10 +174,6 @@ export default function SearchPage() {
     return result;
   }, [flights, sortBy, directOnly]);
 
-  const routeLabel = isFromLocal
-    ? `${localCity} ← ${destCity || "جميع الوجهات"}`
-    : `${destCity || "جميع الوجهات"} ← ${localCity}`;
-
   return (
     <div dir="rtl" className={`search-root ${ready ? "search-on" : ""}`}>
       {/* Header */}
@@ -187,7 +183,19 @@ export default function SearchPage() {
         </button>
         <div className="search-route-info">
           <span className="search-route-text">
-            {routeLabel}
+            {isFromLocal ? (
+              <>
+                {localCity}
+                <ArrowLeft className="h-4 w-4 search-route-arrow-icon" />
+                {destCity || "جميع الوجهات"}
+              </>
+            ) : (
+              <>
+                {destCity || "جميع الوجهات"}
+                <ArrowLeft className="h-4 w-4 search-route-arrow-icon" />
+                {localCity}
+              </>
+            )}
           </span>
           <span className="search-count">
             {isLoading ? "جاري البحث..." : `${filteredFlights.length} رحلة متاحة`}
@@ -199,22 +207,25 @@ export default function SearchPage() {
       <div className="search-filters">
         <div className="search-filters-inner">
           <button
-            className={`search-filter-pill ${sortBy === "price" && !directOnly ? "search-filter-pill-on" : ""}`}
-            onClick={() => { setSortBy("price"); setDirectOnly(false); }}
+            className={`search-filter-pill ${sortBy === "price" ? "search-filter-pill-on" : ""}`}
+            onClick={() => setSortBy("price")}
           >
             الأرخص
+            {sortBy === "price" && <ChevronUp className="h-3 w-3" />}
           </button>
           <button
             className={`search-filter-pill ${sortBy === "duration" ? "search-filter-pill-on" : ""}`}
             onClick={() => setSortBy("duration")}
           >
             الأقصر
+            {sortBy === "duration" && <ChevronUp className="h-3 w-3" />}
           </button>
           <button
             className={`search-filter-pill ${sortBy === "departure" ? "search-filter-pill-on" : ""}`}
             onClick={() => setSortBy("departure")}
           >
             وقت المغادرة
+            {sortBy === "departure" && <ChevronUp className="h-3 w-3" />}
           </button>
           <button
             className={`search-filter-pill ${directOnly ? "search-filter-pill-on" : ""}`}
@@ -244,6 +255,7 @@ export default function SearchPage() {
               key={flight.id}
               flight={flight}
               isCheapest={sortBy === "price" && index === 0}
+              index={index}
             />
           ))}
         </div>

@@ -1,11 +1,9 @@
-import { useMemo, useState } from "react";
-import { ChevronRight, ChevronLeft } from "lucide-react";
+import { useMemo } from "react";
 import type { Flight } from "@/types/flight";
 
 interface PriceCalendarProps {
   flights: Flight[];
   currentMonth: Date;
-  onMonthChange: (date: Date) => void;
   selectedDay: number | null;
   onDaySelect: (day: number | null) => void;
   selectedDestination: string | null;
@@ -37,7 +35,6 @@ function getIsoDayOfWeek(year: number, month: number, day: number): number {
 export function PriceCalendar({
   flights,
   currentMonth,
-  onMonthChange,
   selectedDay,
   onDaySelect,
   selectedDestination,
@@ -109,29 +106,13 @@ export function PriceCalendar({
     return cells;
   }, [year, month, daysInMonth]);
 
-  const handlePrevMonth = () => {
-    const prev = new Date(year, month - 1, 1);
-    onMonthChange(prev);
-  };
-
-  const handleNextMonth = () => {
-    const next = new Date(year, month + 1, 1);
-    onMonthChange(next);
-  };
-
   return (
     <div className="explore-calendar">
-      {/* Month navigation */}
+      {/* Current month label */}
       <div className="explore-cal-nav">
-        <button className="explore-cal-arrow" onClick={handleNextMonth}>
-          <ChevronRight className="h-5 w-5" />
-        </button>
         <span className="explore-cal-month">
           {MONTH_NAMES_AR[month]} {year}
         </span>
-        <button className="explore-cal-arrow" onClick={handlePrevMonth}>
-          <ChevronLeft className="h-5 w-5" />
-        </button>
       </div>
 
       {/* Day headers */}

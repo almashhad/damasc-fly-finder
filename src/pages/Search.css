@@ -61,9 +61,9 @@
   align-items: center;
   gap: 8px;
 }
-.search-route-arrow {
+.search-route-arrow-icon {
   color: hsl(217 91% 60%);
-  font-size: 14px;
+  flex-shrink: 0;
 }
 .search-count {
   font-size: 13px;
@@ -130,15 +130,10 @@
   background: hsl(0 0% 100%);
   border: 1.5px solid hsl(220 13% 91%);
   border-radius: 16px;
-  padding: 18px;
-  margin-bottom: 12px;
+  padding: 14px;
+  margin-bottom: 10px;
   transition: all 0.25s ease;
   box-shadow: 0 1px 4px hsl(220 13% 91% / 0.5);
-}
-.search-flight-card:hover {
-  border-color: hsl(217 91% 80%);
-  box-shadow: 0 6px 20px hsl(217 91% 60% / 0.1);
-  transform: translateY(-2px);
 }
 
 /* ── CHEAPEST BADGE ── */
@@ -160,7 +155,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: 14px;
+  margin-bottom: 10px;
 }
 .search-fc-logo {
   width: 36px;
@@ -195,7 +190,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-bottom: 14px;
+  margin-bottom: 10px;
 }
 .search-fc-point {
   flex: 1;
@@ -203,7 +198,7 @@
 }
 .search-fc-time {
   display: block;
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 700;
   line-height: 1.2;
   color: hsl(213 10% 20%);
@@ -262,11 +257,11 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-top: 12px;
+  padding-top: 10px;
   border-top: 1px solid hsl(220 14% 96%);
 }
 .search-fc-price {
-  font-size: 22px;
+  font-size: 24px;
   font-weight: 700;
   color: hsl(217 91% 50%);
 }
@@ -276,21 +271,17 @@
   font-weight: 400;
   margin-right: 4px;
 }
-.search-fc-book-wrap {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 3px;
-}
 .search-fc-book {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 8px 20px;
+  min-width: 100px;
+  justify-content: center;
+  padding: 10px 16px;
   border-radius: 100px;
   background: hsl(217 91% 60%);
   color: hsl(0 0% 100%);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   text-decoration: none;
   transition: all 0.2s ease;
@@ -298,18 +289,46 @@
   cursor: pointer;
   font-family: inherit;
 }
-.search-fc-book:hover {
-  background: hsl(217 91% 55%);
-  transform: scale(1.05);
-  box-shadow: 0 4px 12px hsl(217 91% 60% / 0.25);
-}
 .search-fc-book:active {
   transform: scale(0.97);
 }
-.search-fc-book-sub {
-  font-size: 10px;
-  color: hsl(215 16% 62%);
-  font-weight: 400;
+
+/* ── CHEAPEST CARD ACCENT ── */
+.search-flight-card-best {
+  border-color: hsl(142 60% 75%);
+  background: hsl(142 60% 98%);
+}
+
+/* ── CARD FADE-IN ── */
+.search-flight-fadein {
+  animation: search-card-enter 0.35s ease-out both;
+}
+@keyframes search-card-enter {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── HOVER (pointer devices only) ── */
+@media (hover: hover) {
+  .search-flight-card:hover {
+    border-color: hsl(217 91% 80%);
+    box-shadow: 0 6px 20px hsl(217 91% 60% / 0.1);
+    transform: translateY(-2px);
+  }
+  .search-flight-card-best:hover {
+    border-color: hsl(142 60% 65%);
+  }
+  .search-fc-book:hover {
+    background: hsl(217 91% 55%);
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px hsl(217 91% 60% / 0.25);
+  }
 }
 
 /* ── NO FLIGHTS ── */
@@ -348,9 +367,10 @@
   .search-header { padding: 12px 16px; }
   .search-route-text { font-size: 15px; }
   .search-count { font-size: 12px; }
-  .search-fc-time { font-size: 20px; }
-  .search-fc-price { font-size: 20px; }
+  .search-fc-time { font-size: 18px; }
+  .search-fc-price { font-size: 22px; }
   .search-results { padding: 12px; }
+  .search-fc-book { padding: 9px 20px; font-size: 13px; }
 }
 
 @media (max-width: 360px) {
@@ -360,7 +380,7 @@
   .search-filters { padding: 10px 12px; }
   .search-filter-pill { padding: 6px 12px; font-size: 12px; }
   .search-flight-card { padding: 12px; }
-  .search-fc-time { font-size: 18px; }
-  .search-fc-price { font-size: 18px; }
-  .search-fc-book { padding: 7px 14px; font-size: 12px; }
+  .search-fc-time { font-size: 16px; }
+  .search-fc-price { font-size: 20px; }
+  .search-fc-book { padding: 8px 18px; font-size: 13px; }
 }

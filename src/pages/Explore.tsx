@@ -31,8 +31,14 @@ const Explore = () => {
   const code = (airportCode || "DAM").toUpperCase();
   const airport = AIRPORT_LABELS[code] || AIRPORT_LABELS["DAM"];
 
+  const handleAirportSwitch = (newCode: string) => {
+    if (newCode !== code) {
+      navigate(`/explore/${newCode}`, { replace: true });
+    }
+  };
+
   const [ready, setReady] = useState(false);
-  const [currentMonth, setCurrentMonth] = useState(() => {
+  const [currentMonth] = useState(() => {
     const now = new Date();
     return new Date(now.getFullYear(), now.getMonth(), 1);
   });
@@ -47,10 +53,16 @@ const Explore = () => {
     requestAnimationFrame(() => setReady(true));
   }, []);
 
-  // Reset selected day when month or destination changes
+  // Reset selected day when destination changes
   useEffect(() => {
     setSelectedDay(null);
-  }, [currentMonth, selectedDestination]);
+  }, [selectedDestination]);
+
+  // Reset selections when airport changes
+  useEffect(() => {
+    setSelectedDay(null);
+    setSelectedDestination(null);
+  }, [code]);
 
   // Get unique destinations for pills
   const destinations = useMemo(() => {
@@ -123,9 +135,25 @@ const Explore = () => {
         <h1 className="explore-title">رحلات من وإلى {airport.name}</h1>
       </header>
 
+      {/* Airport Selector */}
+      <div className="explore-airport-wrap">
+        <div className="explore-airport-seg">
+          {Object.entries(AIRPORT_LABELS).map(([key, val]) => (
+            <button
+              key={key}
+              className={`explore-airport-btn ${code === key ? "explore-airport-on" : ""}`}
+              onClick={() => handleAirportSwitch(key)}
+            >
+              {val.name}
+              <span className="explore-airport-code">{key}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+
       {isLoading ? (
         <div className="explore-loading">
-          <Loader2 className="h-5 w-5 animate-spin" style={{ color: "hsl(217 91% 60%)" }} />
+          <Loader2 className="h-5 w-5 animate-spin explore-loading-icon" />
           <span>جاري تحميل الرحلات...</span>
         </div>
       ) : (
@@ -159,7 +187,6 @@ const Explore = () => {
           <PriceCalendar
             flights={filteredFlights}
             currentMonth={currentMonth}
-            onMonthChange={setCurrentMonth}
             selectedDay={selectedDay}
             onDaySelect={setSelectedDay}
             selectedDestination={selectedDestination}

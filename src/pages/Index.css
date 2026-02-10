@@ -99,7 +99,7 @@
   position: relative;
   z-index: 1;
   max-width: 720px;
-  margin: 0 auto -20px;
+  margin: 0 auto;
   overflow: hidden;
   animation: syria-rise .7s cubic-bezier(.4,0,.2,1) .05s both;
 }
@@ -122,20 +122,6 @@
   pointer-events: none;
   z-index: 2;
 }
-.syria-hero-img-wrap::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    to right,
-    hsl(var(--background)) 0%,
-    transparent 8%,
-    transparent 92%,
-    hsl(var(--background)) 100%
-  );
-  pointer-events: none;
-  z-index: 2;
-}
 .syria-hero-img {
   width: 100%;
   height: auto;
@@ -146,10 +132,10 @@
 /* ═══ HERO TEXT ═══ */
 .syria-hero {
   text-align: center;
-  padding: 16px 24px 8px;
+  padding: 8px 24px 4px;
   position: relative;
-  z-index: 3;
-  margin-top: -24px;
+  z-index: 1;
+  margin-top: 0;
 }
 .syria-h1 {
   font-size: 24px;
@@ -200,7 +186,7 @@
   align-items: center;
   gap: 8px;
   flex-wrap: nowrap;
-  padding: 14px 18px;
+  padding: 12px 16px;
   border-bottom: 1px solid hsl(var(--border));
   position: relative;
   overflow-x: auto;
@@ -290,14 +276,14 @@
   font-size: 16px;
   font-weight: 600;
   display: block;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
   text-align: center;
 }
 .syria-stepper {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 28px;
+  gap: 24px;
 }
 .syria-step-btn {
   width: 48px;
@@ -340,7 +326,7 @@
   width: 100%;
   height: 44px;
   border-radius: 22px;
-  margin-top: 28px;
+  margin-top: 24px;
   background: hsl(var(--primary));
   color: #fff;
   font-size: 15px;
@@ -357,7 +343,7 @@
   display: block;
   width: 100%;
   text-align: right;
-  padding: 14px 18px;
+  padding: 12px 16px;
   border-radius: 14px;
   font-size: 14px;
   color: hsl(var(--foreground));
@@ -370,15 +356,15 @@
 .syria-pop-opt:hover {
   background: hsl(var(--secondary));
 }
-.syria-pop-sel {
-  background: hsl(217 91% 92%) !important;
+.syria-pop-opt.syria-pop-sel {
+  background: hsl(217 91% 92%);
   color: hsl(var(--primary));
   font-weight: 600;
 }
 
 /* ═══ FORM ═══ */
 .syria-form {
-  padding: 14px 16px 18px;
+  padding: 16px;
 }
 
 /* Route box */
@@ -394,7 +380,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 14px 16px;
+  padding: 12px 16px;
   width: 100%;
   background: hsl(var(--background));
   text-align: right;
@@ -494,15 +480,15 @@
 /* Dates */
 .syria-date-boxes {
   display: flex;
-  gap: 10px;
-  margin-top: 14px;
+  gap: 8px;
+  margin-top: 12px;
 }
 .syria-date-inp {
   flex: 1;
   display: flex;
   align-items: center;
-  gap: 14px;
-  padding: 14px 16px;
+  gap: 12px;
+  padding: 12px 16px;
   border: 1px solid hsl(var(--border));
   border-radius: 12px;
   background: hsl(var(--background));
@@ -513,6 +499,16 @@
 }
 .syria-date-empty {
   border-style: dashed;
+}
+.syria-date-value {
+  font-size: 15px;
+}
+.syria-date-placeholder {
+  font-size: 15px;
+  color: hsl(215 16% 65%);
+}
+.syria-loading-icon {
+  color: hsl(var(--primary));
 }
 
 /* CTA */
@@ -543,14 +539,14 @@
 /* ═══ EXPLORE ═══ */
 .syria-explore-sec {
   max-width: 720px;
-  margin: 48px auto 0;
+  margin: 40px auto 0;
   padding: 0 16px;
   position: relative;
   z-index: 1;
 }
 .syria-explore-header {
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
   animation: syria-rise .6s ease .35s both;
 }
 .syria-explore-h2 {
@@ -567,13 +563,13 @@
 .syria-explore-row {
   display: flex;
   align-items: center;
-  gap: 14px;
-  padding: 14px 16px;
+  gap: 12px;
+  padding: 12px 16px;
   width: 100%;
   background: hsl(var(--background));
   border: 1px solid hsl(var(--border));
   border-radius: 14px;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
   text-align: right;
   box-shadow: 0 2px 8px rgba(0,0,0,.03);
   transition: all .28s cubic-bezier(.22,1,.36,1);
@@ -666,6 +662,13 @@
   letter-spacing: .5px;
   flex-shrink: 0;
 }
+.syria-explore-row:hover {
+  border-color: hsl(217 91% 85%);
+  box-shadow: 0 4px 16px rgba(0,0,0,.06);
+}
+.syria-explore-row:active {
+  transform: scale(0.98);
+}
 .syria-explore-chevron {
   color: hsl(var(--primary));
   flex-shrink: 0;
@@ -675,8 +678,8 @@
 
 /* ═══ FOOTER ═══ */
 .syria-ft {
-  margin-top: 64px;
-  padding: 28px;
+  margin-top: 48px;
+  padding: 24px;
   text-align: center;
   font-size: 12px;
   color: hsl(var(--muted-foreground));
@@ -788,8 +791,8 @@
 .syria-sh-row:hover {
   background: hsl(var(--secondary));
 }
-.syria-sh-act {
-  background: hsl(217 91% 92%) !important;
+.syria-sh-row.syria-sh-act {
+  background: hsl(217 91% 92%);
 }
 .syria-sh-icon {
   width: 44px;
@@ -829,7 +832,7 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  margin-top: 14px;
+  margin-top: 12px;
   padding: 10px;
   background: hsl(var(--secondary));
   border-radius: 12px;
@@ -908,9 +911,9 @@
   opacity: .25;
   cursor: default;
 }
-.syria-cal-sel {
-  background: hsl(var(--primary)) !important;
-  color: #fff !important;
+.syria-cal-day.syria-cal-sel {
+  background: hsl(var(--primary));
+  color: #fff;
   font-weight: 600;
 }
 .syria-cal-today {
@@ -935,19 +938,19 @@
 @media (max-width: 480px) {
   /* Hero image compression */
   .syria-hero-img-wrap {
-    max-height: 160px;
+    max-height: 120px;
     overflow: hidden;
   }
   .syria-hero-img-wrap::after {
     height: 50%;
   }
   .syria-hero-img {
-    height: 160px;
+    height: 120px;
     object-fit: cover;
     object-position: center 35%;
   }
   .syria-hero {
-    margin-top: -18px;
+    margin-top: 0;
   }
 
   /* Header compression */
@@ -955,7 +958,7 @@
   .syria-nav-btn { padding: 12px 0; }
 
   /* Hero text compression */
-  .syria-hero { padding: 8px 16px 2px; }
+  .syria-hero { padding: 4px 16px 2px; }
   .syria-h1 { font-size: 20px; }
   .syria-hero-sub { font-size: 14px; margin-top: 4px; }
 
@@ -963,7 +966,7 @@
   .syria-inp { padding: 12px 12px; }
   .syria-date-inp { padding: 12px 12px; }
   .syria-card-area { margin: 8px auto 0; }
-  .syria-form { padding: 10px 12px 16px; }
+  .syria-form { padding: 12px; }
   .syria-date-boxes { gap: 8px; margin-top: 8px; }
   .syria-cta { height: 46px; font-size: 15px; margin-top: 12px; }
   .syria-card { border-radius: 14px; }
@@ -971,12 +974,13 @@
   /* Pills - fit all in one row */
   .syria-pills {
     gap: 6px;
-    padding: 10px 12px;
+    padding: 8px 12px;
   }
   .syria-pill {
-    height: 32px;
-    padding: 0 12px;
+    height: 36px;
+    padding: 0 10px;
     font-size: 12px;
+    border-radius: 18px;
     gap: 4px;
   }
   .syria-pill-sep {
@@ -992,6 +996,12 @@
   .syria-inp-value {
     font-size: 16px;
   }
+  .syria-date-value {
+    font-size: 14px;
+  }
+  .syria-date-placeholder {
+    font-size: 14px;
+  }
   .syria-inp-label {
     font-size: 11px;
     letter-spacing: .6px;
@@ -1001,7 +1011,7 @@
   .syria-explore-h2 { font-size: 20px; }
   .syria-explore-desc { font-size: 13px; }
   .syria-explore-row {
-    padding: 14px 16px;
+    padding: 12px 16px;
     gap: 12px;
   }
   .syria-explore-avi {
@@ -1099,9 +1109,9 @@
 /* Extra small phones */
 @media (max-width: 360px) {
   /* Hero image extra compression */
-  .syria-hero-img-wrap { max-height: 130px; }
-  .syria-hero-img { height: 130px; object-position: center 35%; }
-  .syria-hero { margin-top: -14px; }
+  .syria-hero-img-wrap { max-height: 100px; }
+  .syria-hero-img { height: 100px; object-position: center 35%; }
+  .syria-hero { margin-top: 0; }
 
   /* Header extra compression */
   .syria-logo { height: 46px; }
@@ -1109,28 +1119,31 @@
 
   .syria-h1 { font-size: 19px; }
   .syria-hero-sub { font-size: 13px; }
-  .syria-hero { padding: 6px 14px 2px; }
+  .syria-hero { padding: 4px 12px 2px; }
   .syria-card-area { margin: 8px auto 0; padding: 0 10px; }
 
   .syria-pill {
-    height: 30px;
+    height: 32px;
     padding: 0 10px;
-    font-size: 11px;
+    font-size: 12px;
+    border-radius: 16px;
     gap: 3px;
   }
   .syria-pills {
     gap: 4px;
-    padding: 8px 10px;
+    padding: 8px 12px;
   }
   .syria-pill-sep {
     margin: 0 2px;
     height: 14px;
   }
 
-  .syria-inp { padding: 10px 10px; }
-  .syria-date-inp { padding: 10px 10px; }
+  .syria-inp { padding: 8px 12px; }
+  .syria-date-inp { padding: 8px 12px; }
   .syria-inp-value { font-size: 15px; }
-  .syria-form { padding: 10px 10px 14px; }
+  .syria-date-value { font-size: 13px; }
+  .syria-date-placeholder { font-size: 13px; }
+  .syria-form { padding: 12px; }
 
   .syria-explore-sec { padding: 0 10px; }
   .syria-explore-avi {
@@ -1140,7 +1153,7 @@
   }
 
   .syria-explore-row {
-    padding: 12px 14px;
+    padding: 12px;
     gap: 10px;
     border-radius: 16px;
   }

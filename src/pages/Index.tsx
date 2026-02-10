@@ -323,7 +323,7 @@ const Index = () => {
                   </svg>
                   <div className="syria-inp-col">
                     <span className="syria-inp-label">المغادرة</span>
-                    <span className="syria-inp-value" style={{ fontSize: 15 }}>
+                    <span className="syria-inp-value syria-date-value">
                       {format(selectedDate, "d MMMM yyyy", { locale: ar })}
                     </span>
                   </div>
@@ -346,11 +346,11 @@ const Index = () => {
                     <div className="syria-inp-col">
                       <span className="syria-inp-label">العودة</span>
                       {returnDate ? (
-                        <span className="syria-inp-value" style={{ fontSize: 15 }}>
+                        <span className="syria-inp-value syria-date-value">
                           {format(returnDate, "d MMMM yyyy", { locale: ar })}
                         </span>
                       ) : (
-                        <span style={{ fontSize: 15, color: "hsl(215 16% 65%)" }}>+ تاريخ العودة</span>
+                        <span className="syria-date-placeholder">+ تاريخ العودة</span>
                       )}
                     </div>
                   </button>
@@ -360,7 +360,7 @@ const Index = () => {
               {/* Loading */}
               {isDetecting && (
                 <div className="syria-loading">
-                  <Loader2 className="h-4 w-4 animate-spin" style={{ color: "hsl(217 91% 60%)" }} />
+                  <Loader2 className="h-4 w-4 animate-spin syria-loading-icon" />
                   <span>جاري تحديد موقعك...</span>
                 </div>
               )}
