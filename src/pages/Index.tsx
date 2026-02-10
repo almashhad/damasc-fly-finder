@@ -6,7 +6,7 @@ import { ExploreDealsSection } from "@/components/flight/ExploreDealsSection";
 import type { Destination } from "@/types/flight";
 import { format } from "date-fns";
 import { ar } from "date-fns/locale";
-import syriaHeroImage from "@/assets/syria-hero-illustration.png";
+import syriaHeroImage from "@/assets/syria-hero-illustration.webp";
 import "./Index.css";
 
 // Map countries to their likely airport codes
@@ -39,6 +39,8 @@ const Index = () => {
   const [tab, setTab] = useState<AirportTab>('dam');
   const [q, setQ] = useState('');
   const [ready, setReady] = useState(false);
+  const [calMonth, setCalMonth] = useState(() => new Date());
+  const [returnDate, setReturnDate] = useState<Date | null>(null);
 
   const { data: destinations } = useDestinations();
 
@@ -97,6 +99,26 @@ const Index = () => {
     return destinations?.find(d => d.airport_code === userLocation);
   }, [destinations, userLocation]);
 
+  const today = useMemo(() => {
+    const t = new Date();
+    t.setHours(0, 0, 0, 0);
+    return t;
+  }, []);
+
+  const calDays = useMemo(() => {
+    const year = calMonth.getFullYear();
+    const month = calMonth.getMonth();
+    const first = new Date(year, month, 1);
+    const last = new Date(year, month + 1, 0);
+    const startOffset = (first.getDay() + 1) % 7;
+    const days: (number | null)[] = [];
+    for (let i = 0; i < startOffset; i++) days.push(null);
+    for (let d = 1; d <= last.getDate(); d++) days.push(d);
+    return days;
+  }, [calMonth]);
+
+  const weekDayLabels = ['سب', 'أح', 'اث', 'ثل', 'أر', 'خم', 'جم'];
+
   const airportName = tab === 'dam' ? 'دمشق' : 'حلب';
   const airportCode = tab === 'dam' ? 'DAM' : 'ALP';
   const city = userDestination?.city_ar || (isDetecting ? 'جاري التحديد...' : 'اختر مدينة');
@@ -106,6 +128,16 @@ const Index = () => {
     setUserLocation(dest.airport_code);
     setPicker(false);
     setQ('');
+  };
+
+  const handleDateSelect = (date: Date) => {
+    if (menu === "depart") {
+      setSelectedDate(date);
+      if (returnDate && date > returnDate) setReturnDate(null);
+    } else {
+      setReturnDate(date);
+    }
+    setMenu(null);
   };
 
   const handleSearch = () => {
@@ -123,22 +155,17 @@ const Index = () => {
     <div dir="rtl" onClick={() => setMenu(null)}>
       <div className={`syria-root ${ready ? "root-on" : ""}`}>
 
-        {/* Top gradient glow */}
-        <div className="top-glow" />
 
         {/* HEADER */}
         <header className="syria-hdr">
           <div className="syria-hdr-in">
             <div className="syria-logo">
-              <div className="syria-logo-mark">
-                <svg width="20" height="20" fill="none" viewBox="0 0 24 24">
+              <div className="syria-logo-icon">
+                <svg width="18" height="18" fill="none" viewBox="0 0 24 24">
                   <path d="M21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2L16 11l3.5-3.5C21 6 21.5 4 21 3z" fill="currentColor"/>
                 </svg>
               </div>
-              <div className="syria-logo-name-wrap">
-                <span className="syria-logo-name">رحلات سوريا</span>
-                <span className="syria-logo-sub">بوابتك الجوية</span>
-              </div>
+              <span className="syria-logo-name">رحلات سوريا</span>
             </div>
             <nav className="syria-nav">
               {[
@@ -150,19 +177,12 @@ const Index = () => {
                   className={`syria-nav-btn ${tab === t.id ? "syria-nav-on" : ""}`}
                   onClick={e => { e.stopPropagation(); setTab(t.id); }}
                 >
-                  <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24" style={{ marginLeft: 6 }}>
-                    <path d="M17.8 19.2L16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z" />
-                  </svg>
                   {t.l}
                   {tab === t.id && <span className="syria-nav-bar" />}
                 </button>
               ))}
             </nav>
           </div>
-          {/* Sparkle dots */}
-          <div className="syria-sparkle" style={{ top: '18%', left: '75%' }} aria-hidden="true" />
-          <div className="syria-sparkle" style={{ top: '60%', left: '25%', animationDelay: '1.3s' }} aria-hidden="true" />
-          <div className="syria-sparkle" style={{ top: '40%', left: '90%', animationDelay: '2.6s' }} aria-hidden="true" />
         </header>
 
         {/* HERO ILLUSTRATION */}
@@ -209,12 +229,14 @@ const Index = () => {
                 <>
                   <div className="syria-pop-overlay" onClick={() => setMenu(null)} />
                   <div className="syria-pop syria-pop-pax" onClick={e => e.stopPropagation()}>
+                    <div className="syria-sh-bar"><div className="syria-sh-handle" /></div>
                     <span className="syria-pop-title">عدد المسافرين</span>
                     <div className="syria-stepper">
                       <button className="syria-step-btn" onClick={() => setPax(Math.max(1, pax - 1))} disabled={pax <= 1}>−</button>
                       <span className="syria-step-val">{pax}</span>
                       <button className="syria-step-btn" onClick={() => setPax(Math.min(9, pax + 1))} disabled={pax >= 9}>+</button>
                     </div>
+                    <span className="syria-step-label">{pax === 1 ? 'مسافر' : 'مسافرين'}</span>
                     <button className="syria-pop-done" onClick={() => setMenu(null)}>تأكيد</button>
                   </div>
                 </>
@@ -232,6 +254,8 @@ const Index = () => {
                 <>
                   <div className="syria-pop-overlay" onClick={() => setMenu(null)} />
                   <div className="syria-pop syria-pop-cabin" onClick={e => e.stopPropagation()}>
+                    <div className="syria-sh-bar"><div className="syria-sh-handle" /></div>
+                    <span className="syria-pop-title">درجة السفر</span>
                     {Object.entries(cMap).map(([k, v]) => (
                       <button
                         key={k}
@@ -287,7 +311,10 @@ const Index = () => {
 
               {/* Dates */}
               <div className="syria-date-boxes">
-                <button className="syria-date-inp">
+                <button className="syria-date-inp" onClick={() => {
+                  setCalMonth(new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1));
+                  setMenu("depart");
+                }}>
                   <svg width="20" height="20" fill="none" stroke="hsl(215 16% 47%)" strokeWidth="1.5" viewBox="0 0 24 24">
                     <rect x="3" y="4" width="18" height="18" rx="2.5" />
                     <line x1="16" y1="2" x2="16" y2="6" />
@@ -302,7 +329,14 @@ const Index = () => {
                   </div>
                 </button>
                 {trip === "roundtrip" && (
-                  <button className="syria-date-inp syria-date-empty">
+                  <button
+                    className={`syria-date-inp${!returnDate ? " syria-date-empty" : ""}`}
+                    onClick={() => {
+                      const base = returnDate || selectedDate;
+                      setCalMonth(new Date(base.getFullYear(), base.getMonth(), 1));
+                      setMenu("return");
+                    }}
+                  >
                     <svg width="20" height="20" fill="none" stroke="hsl(215 16% 65%)" strokeWidth="1.5" viewBox="0 0 24 24">
                       <rect x="3" y="4" width="18" height="18" rx="2.5" />
                       <line x1="16" y1="2" x2="16" y2="6" />
@@ -311,7 +345,13 @@ const Index = () => {
                     </svg>
                     <div className="syria-inp-col">
                       <span className="syria-inp-label">العودة</span>
-                      <span style={{ fontSize: 15, color: "hsl(215 16% 65%)" }}>+ تاريخ العودة</span>
+                      {returnDate ? (
+                        <span className="syria-inp-value" style={{ fontSize: 15 }}>
+                          {format(returnDate, "d MMMM yyyy", { locale: ar })}
+                        </span>
+                      ) : (
+                        <span style={{ fontSize: 15, color: "hsl(215 16% 65%)" }}>+ تاريخ العودة</span>
+                      )}
                     </div>
                   </button>
                 )}
@@ -388,6 +428,55 @@ const Index = () => {
                     </button>
                   ))
                 )}
+              </div>
+            </div>
+          </div>
+        )}
+        {/* DATE PICKER */}
+        {(menu === "depart" || menu === "return") && (
+          <div className="syria-ov" onClick={() => setMenu(null)}>
+            <div className="syria-cal-sheet" onClick={e => e.stopPropagation()}>
+              <div className="syria-sh-bar"><div className="syria-sh-handle" /></div>
+              <span className="syria-pop-title">{menu === "depart" ? "تاريخ المغادرة" : "تاريخ العودة"}</span>
+              <div className="syria-cal-nav">
+                <button className="syria-cal-arrow" onClick={() => setCalMonth(m => new Date(m.getFullYear(), m.getMonth() - 1, 1))}>
+                  <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path d="M9 18l6-6-6-6" />
+                  </svg>
+                </button>
+                <span className="syria-cal-month">{format(calMonth, "MMMM yyyy", { locale: ar })}</span>
+                <button className="syria-cal-arrow" onClick={() => setCalMonth(m => new Date(m.getFullYear(), m.getMonth() + 1, 1))}>
+                  <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path d="M15 18l-6-6 6-6" />
+                  </svg>
+                </button>
+              </div>
+              <div className="syria-cal-grid">
+                {weekDayLabels.map(d => (
+                  <span key={d} className="syria-cal-wk">{d}</span>
+                ))}
+                {calDays.map((d, i) => {
+                  if (d === null) return <span key={`e${i}`} />;
+                  const date = new Date(calMonth.getFullYear(), calMonth.getMonth(), d);
+                  const minDate = menu === "return" ? selectedDate : today;
+                  const isPast = date.getTime() < minDate.getTime();
+                  const activeDate = menu === "depart" ? selectedDate : returnDate;
+                  const isSelected = activeDate &&
+                    date.getDate() === activeDate.getDate() &&
+                    date.getMonth() === activeDate.getMonth() &&
+                    date.getFullYear() === activeDate.getFullYear();
+                  const isToday = date.getTime() === today.getTime();
+                  return (
+                    <button
+                      key={d}
+                      disabled={isPast}
+                      className={`syria-cal-day${isSelected ? " syria-cal-sel" : ""}${isToday ? " syria-cal-today" : ""}`}
+                      onClick={() => handleDateSelect(date)}
+                    >
+                      {d}
+                    </button>
+                  );
+                })}
               </div>
             </div>
           </div>
