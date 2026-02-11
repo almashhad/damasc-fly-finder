@@ -248,29 +248,23 @@
   flex-shrink: 0;
 }
 
-/* Popover */
+/* Bottom-sheet pickers */
 .syria-pop {
-  position: absolute;
-  top: calc(100% + 8px);
-  z-index: 60;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
   background: hsl(var(--background));
-  border-radius: 20px;
-  box-shadow: 0 12px 48px rgba(0,0,0,.12), 0 0 0 1px rgba(0,0,0,.04);
-  animation: syria-popIn .22s cubic-bezier(.2,0,0,1.15);
-}
-@keyframes syria-popIn {
-  from { opacity: 0; transform: translateY(-8px) scale(.96); }
-  to { opacity: 1; transform: none; }
+  border-radius: 24px 24px 0 0;
+  box-shadow: 0 -4px 32px rgba(0,0,0,.12);
+  animation: syria-sheetup .35s cubic-bezier(.22,1,.36,1);
 }
 .syria-pop-pax {
-  right: 16px;
-  padding: 28px;
-  min-width: 240px;
+  padding: 8px 24px calc(36px + env(safe-area-inset-bottom, 0px));
 }
 .syria-pop-cabin {
-  left: 16px;
-  padding: 8px;
-  min-width: 200px;
+  padding: 8px 8px calc(32px + env(safe-area-inset-bottom, 0px));
 }
 .syria-pop-title {
   font-size: 16px;
@@ -342,10 +336,10 @@
 .syria-pop-opt {
   display: block;
   width: 100%;
-  text-align: right;
-  padding: 12px 16px;
+  text-align: center;
+  padding: 16px 20px;
   border-radius: 14px;
-  font-size: 14px;
+  font-size: 15px;
   color: hsl(var(--foreground));
   transition: background .1s;
   cursor: pointer;
@@ -930,9 +924,15 @@
 
 /* ═══ RESPONSIVE ═══ */
 
-/* Mobile overlay for popovers */
+/* Overlay for bottom-sheet pickers */
 .syria-pop-overlay {
-  display: none;
+  display: block;
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  background: rgba(15, 23, 42, 0.3);
+  backdrop-filter: blur(4px);
+  animation: syria-fadein 0.2s;
 }
 
 @media (max-width: 480px) {
@@ -1029,66 +1029,6 @@
   .syria-explore-price { font-size: 12px; }
   .syria-explore-dest-count { font-size: 11px; }
   .syria-explore-meta { gap: 8px; }
-
-  /* Popover → Bottom Sheet */
-  .syria-pop-overlay {
-    display: block;
-    position: fixed;
-    inset: 0;
-    z-index: 999;
-    background: rgba(15, 23, 42, 0.3);
-    backdrop-filter: blur(4px);
-    animation: syria-fadein 0.2s;
-  }
-  .syria-pop-pax,
-  .syria-pop-cabin {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    top: auto;
-    width: 100%;
-    min-width: unset;
-    border-radius: 24px 24px 0 0;
-    animation: syria-sheetup 0.35s cubic-bezier(.22,1,.36,1);
-    z-index: 1000;
-    box-shadow: 0 -4px 32px rgba(0,0,0,.12);
-  }
-  .syria-pop-pax {
-    padding: 8px 24px calc(36px + env(safe-area-inset-bottom, 0px));
-  }
-  .syria-pop-pax .syria-pop-title {
-    font-size: 17px;
-    margin-bottom: 28px;
-  }
-  .syria-pop-pax .syria-stepper {
-    gap: 32px;
-  }
-  .syria-pop-pax .syria-step-btn {
-    width: 52px;
-    height: 52px;
-    font-size: 26px;
-  }
-  .syria-pop-pax .syria-step-val {
-    font-size: 40px;
-  }
-  .syria-pop-pax .syria-step-label {
-    margin-top: 8px;
-    font-size: 14px;
-  }
-  .syria-pop-pax .syria-pop-done {
-    height: 48px;
-    margin-top: 32px;
-    font-size: 16px;
-  }
-  .syria-pop-cabin {
-    padding: 8px 8px calc(32px + env(safe-area-inset-bottom, 0px));
-  }
-  .syria-pop-cabin .syria-pop-opt {
-    padding: 16px 20px;
-    font-size: 15px;
-    text-align: center;
-  }
 
   /* City picker full height */
   .syria-sheet {

@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo, useRef } from "react";
+import { createPortal } from "react-dom";
 import { useNavigate } from "react-router-dom";
 import { Plane, Loader2 } from "lucide-react";
 import { useDestinations } from "@/hooks/useFlights";
@@ -225,7 +226,7 @@ const Index = () => {
                 </svg>
                 {pax}
               </button>
-              {menu === "pax" && (
+              {menu === "pax" && createPortal(
                 <>
                   <div className="syria-pop-overlay" onClick={() => setMenu(null)} />
                   <div className="syria-pop syria-pop-pax" onClick={e => e.stopPropagation()}>
@@ -239,7 +240,8 @@ const Index = () => {
                     <span className="syria-step-label">{pax === 1 ? 'مسافر' : 'مسافرين'}</span>
                     <button className="syria-pop-done" onClick={() => setMenu(null)}>تأكيد</button>
                   </div>
-                </>
+                </>,
+                document.body
               )}
               <button
                 className="syria-pill"
@@ -250,7 +252,7 @@ const Index = () => {
                   <path d="M1 1l4 4 4-4" />
                 </svg>
               </button>
-              {menu === "cabin" && (
+              {menu === "cabin" && createPortal(
                 <>
                   <div className="syria-pop-overlay" onClick={() => setMenu(null)} />
                   <div className="syria-pop syria-pop-cabin" onClick={e => e.stopPropagation()}>
@@ -266,7 +268,8 @@ const Index = () => {
                       </button>
                     ))}
                   </div>
-                </>
+                </>,
+                document.body
               )}
             </div>
 
