@@ -130,10 +130,10 @@
   background: hsl(0 0% 100%);
   border: 1.5px solid hsl(220 13% 91%);
   border-radius: 16px;
-  padding: 14px;
-  margin-bottom: 10px;
-  transition: all 0.25s ease;
-  box-shadow: 0 1px 4px hsl(220 13% 91% / 0.5);
+  padding: 16px;
+  margin-bottom: 12px;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  box-shadow: 0 1px 3px hsl(220 13% 91% / 0.4), 0 4px 12px hsl(220 13% 91% / 0.15);
 }
 
 /* ── CHEAPEST BADGE ── */
@@ -143,11 +143,12 @@
   gap: 4px;
   padding: 4px 12px;
   border-radius: 100px;
-  background: hsl(142 60% 94%);
+  background: hsl(142 60% 92%);
   color: hsl(142 71% 30%);
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 700;
   margin-bottom: 12px;
+  animation: search-badge-pop 0.35s ease-out 0.4s both;
 }
 
 /* Card top: airline info */
@@ -155,11 +156,11 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: 10px;
+  margin-bottom: 14px;
 }
 .search-fc-logo {
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   background: hsl(217 91% 95%);
   display: flex;
@@ -176,13 +177,13 @@
   flex: 1;
 }
 .search-fc-airline-name {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
-  color: hsl(213 10% 20%);
+  color: hsl(213 10% 30%);
 }
 .search-fc-flight-num {
   font-size: 12px;
-  color: hsl(215 16% 47%);
+  color: hsl(215 16% 55%);
 }
 
 /* Card middle: route */
@@ -190,7 +191,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-bottom: 10px;
+  margin-bottom: 14px;
 }
 .search-fc-point {
   flex: 1;
@@ -213,6 +214,8 @@
   display: block;
   font-size: 11px;
   color: hsl(215 16% 62%);
+  letter-spacing: 1px;
+  font-weight: 500;
 }
 
 .search-fc-middle {
@@ -233,17 +236,19 @@
   display: flex;
   align-items: center;
   width: 100%;
+  padding: 0 2px;
 }
 .search-fc-line-bar {
   flex: 1;
   height: 0;
-  border-top: 2px dashed hsl(220 13% 82%);
+  border-top: 1.5px dashed hsl(217 91% 80%);
 }
 .search-fc-dot {
-  width: 6px;
-  height: 6px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
-  background: hsl(217 91% 60%);
+  background: hsl(0 0% 100%);
+  border: 2px solid hsl(217 91% 60%);
   flex-shrink: 0;
 }
 .search-fc-stops {
@@ -258,17 +263,18 @@
   align-items: center;
   justify-content: space-between;
   padding-top: 10px;
-  border-top: 1px solid hsl(220 14% 96%);
+  border-top: 1px solid hsl(220 13% 91%);
 }
 .search-fc-price {
-  font-size: 24px;
+  font-size: 26px;
   font-weight: 700;
-  color: hsl(217 91% 50%);
+  color: hsl(217 91% 45%);
+  letter-spacing: -0.5px;
 }
 .search-fc-price-label {
-  font-size: 11px;
+  font-size: 12px;
   color: hsl(215 16% 55%);
-  font-weight: 400;
+  font-weight: 500;
   margin-right: 4px;
 }
 .search-fc-book {
@@ -277,26 +283,34 @@
   gap: 6px;
   min-width: 100px;
   justify-content: center;
-  padding: 10px 16px;
+  padding: 10px 20px;
   border-radius: 100px;
   background: hsl(217 91% 60%);
   color: hsl(0 0% 100%);
   font-size: 14px;
   font-weight: 600;
   text-decoration: none;
-  transition: all 0.2s ease;
+  transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
   border: none;
   cursor: pointer;
   font-family: inherit;
+  box-shadow: 0 2px 6px hsl(217 91% 60% / 0.2);
 }
 .search-fc-book:active {
-  transform: scale(0.97);
+  transform: scale(0.95);
+  box-shadow: 0 1px 3px hsl(217 91% 60% / 0.2);
 }
 
 /* ── CHEAPEST CARD ACCENT ── */
 .search-flight-card-best {
   border-color: hsl(142 60% 75%);
-  background: hsl(142 60% 98%);
+  background: linear-gradient(to bottom, hsl(142 60% 98%), hsl(142 60% 96%));
+  box-shadow: 0 1px 3px hsl(220 13% 91% / 0.4), 0 4px 12px hsl(220 13% 91% / 0.15), 0 0 0 1px hsl(142 60% 85% / 0.3);
+}
+
+/* ── STOPS TRANSFER (amber) ── */
+.search-fc-stops-transfer {
+  color: hsl(25 90% 45%);
 }
 
 /* ── CARD FADE-IN ── */
@@ -314,19 +328,31 @@
   }
 }
 
+/* ── BADGE POP-IN ── */
+@keyframes search-badge-pop {
+  0% { opacity: 0; transform: scale(0.6); }
+  70% { transform: scale(1.08); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+/* ── CARD TOUCH FEEDBACK ── */
+.search-flight-card:active {
+  transform: scale(0.985);
+}
+
 /* ── HOVER (pointer devices only) ── */
 @media (hover: hover) {
   .search-flight-card:hover {
     border-color: hsl(217 91% 80%);
     box-shadow: 0 6px 20px hsl(217 91% 60% / 0.1);
-    transform: translateY(-2px);
+    transform: translateY(-1px);
   }
   .search-flight-card-best:hover {
     border-color: hsl(142 60% 65%);
   }
   .search-fc-book:hover {
     background: hsl(217 91% 55%);
-    transform: scale(1.05);
+    transform: translateY(-1px);
     box-shadow: 0 4px 12px hsl(217 91% 60% / 0.25);
   }
 }
@@ -368,8 +394,8 @@
   .search-route-text { font-size: 15px; }
   .search-count { font-size: 12px; }
   .search-fc-time { font-size: 18px; }
-  .search-fc-price { font-size: 22px; }
-  .search-results { padding: 12px; }
+  .search-fc-price { font-size: 24px; }
+  .search-results { padding: 12px 14px; }
   .search-fc-book { padding: 9px 20px; font-size: 13px; }
 }
 
@@ -381,6 +407,6 @@
   .search-filter-pill { padding: 6px 12px; font-size: 12px; }
   .search-flight-card { padding: 12px; }
   .search-fc-time { font-size: 16px; }
-  .search-fc-price { font-size: 20px; }
+  .search-fc-price { font-size: 22px; }
   .search-fc-book { padding: 8px 18px; font-size: 13px; }
 }

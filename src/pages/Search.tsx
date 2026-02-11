@@ -72,7 +72,7 @@ function SearchFlightCard({ flight, isCheapest, index = 0 }: { flight: Flight; i
             <div className="search-fc-line-bar" />
             <span className="search-fc-dot" />
           </div>
-          <span className="search-fc-stops">
+          <span className={`search-fc-stops${flight.stops > 0 ? " search-fc-stops-transfer" : ""}`}>
             {flight.stops === 0 ? "مباشرة" : `${flight.stops} توقف`}
           </span>
         </div>
