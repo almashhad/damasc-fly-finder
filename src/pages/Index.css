@@ -767,7 +767,7 @@
 
 .syria-sh-body {
   overflow-y: auto;
-  max-height: calc(85vh - 150px);
+  height: calc(85vh - 150px);
 }
 .syria-sh-none {
   padding: 64px;
@@ -1095,7 +1095,7 @@
     max-height: 92vh;
   }
   .syria-sh-body {
-    max-height: calc(92vh - 120px);
+    height: calc(92vh - 120px);
   }
   .syria-sh-row {
     padding: 14px 20px;
