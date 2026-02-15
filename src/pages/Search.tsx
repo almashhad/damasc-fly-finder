@@ -15,10 +15,7 @@ type SortBy = "price" | "duration" | "departure";
 const airportLookup = new Map(destinations.map(d => [d.airport_code, d]));
 
 const STATUS_MESSAGES = [
-  { delay: 0, text: "جاري البحث في Google Flights..." },
-  { delay: 5000, text: "جاري مقارنة الأسعار..." },
-  { delay: 15000, text: "جاري تحليل أفضل العروض..." },
-  { delay: 30000, text: "يتم الآن جلب النتائج..." },
+  { delay: 0, text: "جاري البحث عن رحلات..." },
 ];
 
 function SearchFlightCard({ flight, isCheapest, index = 0 }: { flight: LiveFlight; isCheapest?: boolean; index?: number }) {
@@ -45,12 +42,6 @@ function SearchFlightCard({ flight, isCheapest, index = 0 }: { flight: LiveFligh
         </div>
       )}
 
-      {flight.isBest && !isCheapest && (
-        <div className="search-fc-badge" style={{ background: 'hsl(142 71% 45%)' }}>
-          <span>✓</span>
-          أفضل رحلة
-        </div>
-      )}
 
       {/* Airline */}
       <div className="search-fc-top">
